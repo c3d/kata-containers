@@ -1595,7 +1595,7 @@ fn execute_hook(logger: &Logger, h: &Hook, st: &OCIState) -> Result<()> {
                         info!(
                             logger,
                             "wait child error: {} {}",
-                            e.description(),
+                            e.to_string(),
                             e.raw_os_error().unwrap()
                         );
 
