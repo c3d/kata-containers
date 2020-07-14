@@ -19,7 +19,7 @@ use libc::pid_t;
 use oci::{LinuxDevice, LinuxIDMapping};
 use std::clone::Clone;
 use std::fmt::Display;
-use std::process::{Child, Command};
+use std::process::Command;
 
 // use crate::configs::namespaces::{NamespaceType};
 use crate::cgroups::Manager as CgroupManager;
@@ -890,7 +890,6 @@ impl BaseContainer for LinuxContainer {
             &p,
             self.cgroup_manager.as_ref().unwrap(),
             &st,
-            &mut child,
             pwfd,
             prfd,
         ) {
@@ -920,7 +919,7 @@ impl BaseContainer for LinuxContainer {
 
         if p.init {
             let spec = self.config.spec.as_mut().unwrap();
-            update_namespaces(&self.logger, spec, p.pid)?;
+            update_namespaces(spec, p.pid)?;
         }
         self.processes.insert(p.pid, p);
 
@@ -1040,7 +1039,7 @@ fn do_exec(args: &[String]) -> Result<()> {
     Ok(())
 }
 
-fn update_namespaces(logger: &Logger, spec: &mut Spec, init_pid: RawFd) -> Result<()> {
+fn update_namespaces(spec: &mut Spec, init_pid: RawFd) -> Result<()> {
     let linux = match spec.linux.as_mut() {
         None => return Err(anyhow!("Spec didn't container linux field")),
         Some(l) => l,
@@ -1119,7 +1118,6 @@ fn join_namespaces(
     p: &Process,
     cm: &FsManager,
     st: &OCIState,
-    child: &mut Child,
     pwfd: RawFd,
     prfd: RawFd,
 ) -> Result<()> {
