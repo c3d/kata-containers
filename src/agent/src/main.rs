@@ -116,7 +116,7 @@ fn main() -> Result<()> {
     }
 
     if args.len() == 2 && args[1] == "init" {
-        rustjail::container::init_child();
+        rustjail::container::init_child()?;
         exit(0);
     }
 
