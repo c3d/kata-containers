@@ -25,7 +25,6 @@ extern crate scopeguard;
 
 #[macro_use]
 extern crate slog;
-#[macro_use]
 extern crate netlink;
 
 use crate::netlink::{RtnlHandle, NETLINK_ROUTE};
@@ -128,7 +127,7 @@ fn main() -> Result<()> {
 
     // support vsock log
     let (rfd, wfd) = unistd::pipe2(OFlag::O_CLOEXEC)?;
-    let writer = unsafe { File::from_raw_fd(wfd) };
+    unsafe { File::from_raw_fd(wfd) };
 
     let agentConfig = AGENT_CONFIG.clone();
 
