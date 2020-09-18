@@ -338,7 +338,7 @@ pub fn init_child() -> Result<()> {
         Err(e) => {
             log_child!(cfd_log, "child exit: {:?}", e);
             write_sync(cwfd, SYNC_FAILED, format!("{:?}", e).as_str())?;
-            return Err(ErrorKind::ErrorCode(format!("child exit {}", e)).into());
+            return Err(anyhow!("child exit {}", e));
         }
     }
 
@@ -767,7 +767,7 @@ impl BaseContainer for LinuxContainer {
         let st = self.oci_state()?;
 
         let (pfd_log, cfd_log) = unistd::pipe().context("failed to create pipe")?;
-        fcntl::fcntl(pfd_log, FcntlArg::F_SETFD(FdFlag::FD_CLOEXEC));
+        fcntl::fcntl(pfd_log, FcntlArg::F_SETFD(FdFlag::FD_CLOEXEC))?;
 
         let child_logger = logger.new(o!("action" => "child process log"));
         let log_handler = thread::spawn(move || {
@@ -796,8 +796,8 @@ impl BaseContainer for LinuxContainer {
         info!(logger, "exec fifo opened!");
         let (prfd, cwfd) = unistd::pipe().context("failed to create pipe")?;
         let (crfd, pwfd) = unistd::pipe().context("failed to create pipe")?;
-        fcntl::fcntl(prfd, FcntlArg::F_SETFD(FdFlag::FD_CLOEXEC));
-        fcntl::fcntl(pwfd, FcntlArg::F_SETFD(FdFlag::FD_CLOEXEC));
+        fcntl::fcntl(prfd, FcntlArg::F_SETFD(FdFlag::FD_CLOEXEC))?;
+        fcntl::fcntl(pwfd, FcntlArg::F_SETFD(FdFlag::FD_CLOEXEC))?;
 
         defer!({
             if let Err(e) = unistd::close(prfd) {
@@ -939,9 +939,7 @@ impl BaseContainer for LinuxContainer {
 
         info!(logger, "wait on child log handler");
         if let Err(e) = log_handler.join() {
-            return Err(
-                ErrorKind::ErrorCode(format!("Failed joining with child handler {:?}", e)).into(),
-            );
+            return Err(anyhow!("Failed joining with child handler {:?}", e));
         }
         info!(logger, "create process completed");
 
