@@ -121,6 +121,11 @@ fn mount<P1: ?Sized + NixPath, P2: ?Sized + NixPath, P3: ?Sized + NixPath, P4: ?
     #[cfg(not(test))]
     return mount::mount(source, target, fstype, flags, data);
     #[cfg(test)]
+    let _ = source; // Get rid of "unused variable" warnings
+    let _ = target;
+    let _ = fstype;
+    let _ = flags;
+    let _ = data;
     return Ok(());
 }
 
@@ -132,6 +137,8 @@ fn umount2<P: ?Sized + NixPath>(
     #[cfg(not(test))]
     return mount::umount2(target, flags);
     #[cfg(test)]
+    let _ = target; // Get rid of "unused variable" warnings
+    let _ = flags;
     return Ok(());
 }
 
@@ -428,6 +435,8 @@ fn pivot_root<P1: ?Sized + NixPath, P2: ?Sized + NixPath>(
     #[cfg(not(test))]
     return unistd::pivot_root(new_root, put_old);
     #[cfg(test)]
+    let _ = new_root; // Get rid of "unused variable" warnings
+    let _ = put_old;
     return Ok(());
 }
 
@@ -557,6 +566,7 @@ fn chroot<P: ?Sized + NixPath>(path: &P) -> Result<(), nix::Error> {
     #[cfg(not(test))]
     return unistd::chroot(path);
     #[cfg(test)]
+    let _ = path; // Get rid of "unused variable" warning
     return Ok(());
 }
 
@@ -1004,8 +1014,8 @@ mod tests {
         // there is no spec.mounts, but should pass
         let ret = init_rootfs(stdout_fd, &spec, &cpath, &mounts, true);
         assert!(ret.is_ok(), "Should pass. Got: {:?}", ret);
-        let ret = fs::remove_dir_all(rootfs.path().join("dev"));
-        let ret = fs::create_dir(rootfs.path().join("dev"));
+        let _ = fs::remove_dir_all(rootfs.path().join("dev"));
+        let _ = fs::create_dir(rootfs.path().join("dev"));
 
         // Adding bad mount point to spec.mounts
         spec.mounts.push(oci::Mount {
@@ -1023,8 +1033,8 @@ mod tests {
             ret
         );
         spec.mounts.pop();
-        let ret = fs::remove_dir_all(rootfs.path().join("dev"));
-        let ret = fs::create_dir(rootfs.path().join("dev"));
+        let _ = fs::remove_dir_all(rootfs.path().join("dev"));
+        let _ = fs::create_dir(rootfs.path().join("dev"));
 
         // mounting a cgroup
         spec.mounts.push(oci::Mount {
@@ -1037,8 +1047,8 @@ mod tests {
         let ret = init_rootfs(stdout_fd, &spec, &cpath, &mounts, true);
         assert!(ret.is_ok(), "Should pass. Got: {:?}", ret);
         spec.mounts.pop();
-        let ret = fs::remove_dir_all(rootfs.path().join("dev"));
-        let ret = fs::create_dir(rootfs.path().join("dev"));
+        let _ = fs::remove_dir_all(rootfs.path().join("dev"));
+        let _ = fs::create_dir(rootfs.path().join("dev"));
 
         // mounting /dev
         spec.mounts.push(oci::Mount {
