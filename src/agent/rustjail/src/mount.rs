@@ -123,11 +123,7 @@ fn mount<P1: ?Sized + NixPath, P2: ?Sized + NixPath, P3: ?Sized + NixPath, P4: ?
     #[cfg(not(test))]
     return mount::mount(source, target, fstype, flags, data);
     #[cfg(test)]
-    let _ = source; // Get rid of "unused variable" warnings
-    let _ = target;
-    let _ = fstype;
-    let _ = flags;
-    let _ = data;
+    #[allow(unused_variables)]
     return Ok(());
 }
 
@@ -139,8 +135,7 @@ fn umount2<P: ?Sized + NixPath>(
     #[cfg(not(test))]
     return mount::umount2(target, flags);
     #[cfg(test)]
-    let _ = target; // Get rid of "unused variable" warnings
-    let _ = flags;
+    #[allow(unused_variables)]
     return Ok(());
 }
 
@@ -437,8 +432,7 @@ fn pivot_root<P1: ?Sized + NixPath, P2: ?Sized + NixPath>(
     #[cfg(not(test))]
     return unistd::pivot_root(new_root, put_old);
     #[cfg(test)]
-    let _ = new_root; // Get rid of "unused variable" warnings
-    let _ = put_old;
+    #[allow(unused_variables)]
     return Ok(());
 }
 
@@ -568,7 +562,7 @@ fn chroot<P: ?Sized + NixPath>(path: &P) -> Result<(), nix::Error> {
     #[cfg(not(test))]
     return unistd::chroot(path);
     #[cfg(test)]
-    let _ = path; // Get rid of "unused variable" warning
+    #[allow(unused_variables)]
     return Ok(());
 }
 
@@ -1191,8 +1185,8 @@ mod tests {
         let tempdir = tempdir().unwrap();
 
         let olddir = unistd::getcwd().unwrap();
-        defer!(unistd::chdir(&olddir););
-        unistd::chdir(tempdir.path());
+        defer!(let _ = unistd::chdir(&olddir););
+        let _ = unistd::chdir(tempdir.path());
 
         let dev = oci::LinuxDevice {
             path: "/fifo".to_string(),
