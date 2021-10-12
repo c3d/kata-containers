@@ -124,6 +124,7 @@ github.com/cyphar/filepath-securejoin
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
 # github.com/docker/go-units v0.4.0
+## explicit
 github.com/docker/go-units
 # github.com/fsnotify/fsnotify v1.4.9
 ## explicit
@@ -224,6 +225,9 @@ github.com/opencontainers/runc/libcontainer/cgroups/fscommon
 github.com/opencontainers/runc/libcontainer/cgroups/systemd
 github.com/opencontainers/runc/libcontainer/configs
 github.com/opencontainers/runc/libcontainer/devices
+github.com/opencontainers/runc/libcontainer/seccomp
+github.com/opencontainers/runc/libcontainer/seccomp/patchbpf
+github.com/opencontainers/runc/libcontainer/specconv
 github.com/opencontainers/runc/libcontainer/user
 github.com/opencontainers/runc/libcontainer/userns
 github.com/opencontainers/runc/libcontainer/utils
@@ -262,6 +266,8 @@ github.com/russross/blackfriday/v2
 # github.com/safchain/ethtool v0.0.0-20190326074333-42ed695e3de8
 ## explicit
 github.com/safchain/ethtool
+# github.com/seccomp/libseccomp-golang v0.9.1
+github.com/seccomp/libseccomp-golang
 # github.com/shurcooL/sanitized_anchor_name v1.0.0
 github.com/shurcooL/sanitized_anchor_name
 # github.com/sirupsen/logrus v1.8.1
@@ -319,6 +325,7 @@ go.opentelemetry.io/otel/sdk/trace
 go.opentelemetry.io/otel/trace
 # golang.org/x/net v0.0.0-20210226172049-e18ecbb05110
 ## explicit
+golang.org/x/net/bpf
 golang.org/x/net/context
 golang.org/x/net/context/ctxhttp
 golang.org/x/net/http/httpguts

@@ -23,6 +23,7 @@ import (
 	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils"
 	vc "github.com/kata-containers/kata-containers/src/runtime/virtcontainers"
 	"github.com/kata-containers/kata-containers/src/runtime/virtcontainers/pkg/oci"
+	"github.com/kata-containers/kata-containers/src/runtime/virtcontainers/pkg/rootless"
 	"github.com/kata-containers/kata-containers/src/runtime/virtcontainers/pkg/vcmock"
 	specs "github.com/opencontainers/runtime-spec/specs-go"
 	"github.com/stretchr/testify/assert"
@@ -743,4 +744,23 @@ func TestMainResetCLIGlobals(t *testing.T) {
 	assert.Equal(cli.AppHelpTemplate, savedCLIAppHelpTemplate)
 	assert.NotNil(cli.VersionPrinter)
 	assert.NotNil(savedCLIVersionPrinter)
+}
+
+func createTempContainerIDMapping(containerID, sandboxID string) (string, error) {
+	// Mocking rootless
+	rootless.IsRootless = func() bool { return false }
+
+	tmpDir, err := ioutil.TempDir("", "containers-mapping")
+	if err != nil {
+		return "", err
+	}
+	ctrsMapTreePath = tmpDir
+
+	path := filepath.Join(ctrsMapTreePath, containerID, sandboxID)
+	if err := os.MkdirAll(path, 0750); err != nil {
+		return "", err
+	}
+
+	katautils.SetCtrsMapTreePath(ctrsMapTreePath)
+	return tmpDir, nil
 }

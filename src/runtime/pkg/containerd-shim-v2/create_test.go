@@ -182,9 +182,6 @@ func TestCreateContainerSuccess(t *testing.T) {
 
 	sandbox := &vcmock.Sandbox{
 		MockID: testSandboxID,
-		CreateContainerFunc: func(containerConfig vc.ContainerConfig) (vc.VCContainer, error) {
-			return &vcmock.Container{}, nil
-		},
 	}
 
 	tmpdir, bundlePath, ociConfigFile := ktu.SetupOCIConfigFile(t)
