@@ -354,7 +354,7 @@ func (a *Acrn) setConfig(config *HypervisorConfig) error {
 }
 
 // CreateVM is the VM creation
-func (a *Acrn) CreateVM(ctx context.Context, id string, networkNS NetworkNamespace, hypervisorConfig *HypervisorConfig) error {
+func (a *Acrn) CreateVM(ctx context.Context, id string, networkNS NetworkNamespace, hypervisorConfig *HypervisorConfig, stateful bool) error {
 	// Save the tracing context
 	a.ctx = ctx
 

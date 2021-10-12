@@ -248,7 +248,7 @@ func TestClhCreateVM(t *testing.T) {
 		},
 	}
 
-	err = clh.CreateVM(context.Background(), sandbox.id, NetworkNamespace{}, &sandbox.config.HypervisorConfig)
+	err = clh.CreateVM(context.Background(), sandbox.id, NetworkNamespace{}, &sandbox.config.HypervisorConfig, false)
 	assert.NoError(err)
 	assert.Exactly(clhConfig, clh.config)
 }

@@ -201,7 +201,7 @@ func (clh *cloudHypervisor) setConfig(config *HypervisorConfig) error {
 
 // For cloudHypervisor this call only sets the internal structure up.
 // The VM will be created and started through StartVM().
-func (clh *cloudHypervisor) CreateVM(ctx context.Context, id string, networkNS NetworkNamespace, hypervisorConfig *HypervisorConfig) error {
+func (clh *cloudHypervisor) CreateVM(ctx context.Context, id string, networkNS NetworkNamespace, hypervisorConfig *HypervisorConfig, stateful bool) error {
 	clh.ctx = ctx
 
 	span, newCtx := katatrace.Trace(clh.ctx, clh.Logger(), "CreateVM", clhTracingTags, map[string]string{"sandbox_id": clh.id})

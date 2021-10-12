@@ -120,6 +120,8 @@ func CreateSandbox(ctx context.Context, vci vc.VC, ociSpec specs.Spec, runtimeCo
 		return nil, vc.Process{}, err
 	}
 
+	sandboxConfig.Stateful = true
+
 	if err := checkForFIPS(&sandboxConfig); err != nil {
 		return nil, vc.Process{}, err
 	}

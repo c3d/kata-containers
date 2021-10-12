@@ -157,11 +157,12 @@ type firecracker struct {
 	gid              string
 	fcConfigPath     string
 
-	info   FirecrackerInfo
-	config HypervisorConfig
-	state  firecrackerState
+	info	      FirecrackerInfo
+	config        HypervisorConfig
+	state         firecrackerState
 
-	jailed bool //Set to true if jailer is enabled
+	jailed        bool //Set to true if jailer is enabled
+	stateful      bool //Set to true if running with shimv2
 }
 
 type firecrackerDevice struct {
@@ -200,7 +201,7 @@ func (fc *firecracker) setConfig(config *HypervisorConfig) error {
 
 // CreateVM For firecracker this call only sets the internal structure up.
 // The sandbox will be created and started through startSandbox().
-func (fc *firecracker) CreateVM(ctx context.Context, id string, networkNS NetworkNamespace, hypervisorConfig *HypervisorConfig) error {
+func (fc *firecracker) CreateVM(ctx context.Context, id string, networkNS NetworkNamespace, hypervisorConfig *HypervisorConfig, stateful bool) error {
 	fc.ctx = ctx
 
 	span, _ := katatrace.Trace(ctx, fc.Logger(), "CreateVM", fcTracingTags, map[string]string{"sandbox_id": fc.id})
@@ -210,6 +211,7 @@ func (fc *firecracker) CreateVM(ctx context.Context, id string, networkNS Networ
 	//https://github.com/kata-containers/runtime/issues/1065
 	fc.id = fc.truncateID(id)
 	fc.state.set(notReady)
+	fc.stateful = stateful
 
 	if err := fc.setConfig(hypervisorConfig); err != nil {
 		return err
@@ -704,7 +706,7 @@ func (fc *firecracker) fcInitConfiguration(ctx context.Context) error {
 		return err
 	}
 
-	if fc.config.Debug {
+	if fc.config.Debug && fc.stateful {
 		fcKernelParams = append(fcKernelParams, Param{"console", "ttyS0"})
 	} else {
 		fcKernelParams = append(fcKernelParams, []Param{

@@ -55,6 +55,9 @@ func CreateSandbox(ctx context.Context, sandboxConfig SandboxConfig, factory Fac
 	defer span.End()
 
 	s, err := createSandboxFromConfig(ctx, sandboxConfig, factory)
+	if err == nil {
+		s.releaseStatelessSandbox(ctx)
+	}
 
 	return s, err
 }
