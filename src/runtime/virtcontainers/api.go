@@ -142,7 +142,7 @@ func DeleteSandbox(ctx context.Context, sandboxID string) (VCSandbox, error) {
 	}
 
 	// Delete it.
-	if err := s.Delete(); err != nil {
+	if err := s.Delete(ctx); err != nil {
 		return nil, err
 	}
 
@@ -201,12 +201,12 @@ func StartSandbox(ctx context.Context, sandboxID string) (VCSandbox, error) {
 	}
 
 	// Start it
-	err = s.Start()
+	err = s.Start(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	if err = s.storeSandbox(); err != nil {
+	if err = s.storeSandbox(ctx); err != nil {
 		return nil, err
 	}
 
@@ -236,12 +236,12 @@ func StopSandbox(ctx context.Context, sandboxID string, force bool) (VCSandbox, 
 	}
 
 	// Stop it.
-	err = s.Stop(force)
+	err = s.Stop(ctx, force)
 	if err != nil {
 		return nil, err
 	}
 
-	if err = s.storeSandbox(); err != nil {
+	if err = s.storeSandbox(ctx); err != nil {
 		return nil, err
 	}
 
@@ -267,7 +267,7 @@ func RunSandbox(ctx context.Context, sandboxConfig SandboxConfig, factory Factor
 	defer unlock()
 
 	// Start the sandbox
-	err = s.Start()
+	err = s.Start(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -378,12 +378,12 @@ func CreateContainer(ctx context.Context, sandboxID string, containerConfig Cont
 		return nil, nil, err
 	}
 
-	c, err := s.CreateContainer(containerConfig)
+	c, err := s.CreateContainer(ctx, containerConfig)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	if err = s.storeSandbox(); err != nil {
+	if err = s.storeSandbox(ctx); err != nil {
 		return nil, nil, err
 	}
 
@@ -416,7 +416,7 @@ func DeleteContainer(ctx context.Context, sandboxID, containerID string) (VCCont
 		return nil, err
 	}
 
-	return s.DeleteContainer(containerID)
+	return s.DeleteContainer(ctx, containerID)
 }
 
 // StartContainer is the virtcontainers container starting entry point.
@@ -444,7 +444,7 @@ func StartContainer(ctx context.Context, sandboxID, containerID string) (VCConta
 		return nil, err
 	}
 
-	return s.StartContainer(containerID)
+	return s.StartContainer(ctx, containerID)
 }
 
 // StopContainer is the virtcontainers container stopping entry point.
@@ -472,7 +472,7 @@ func StopContainer(ctx context.Context, sandboxID, containerID string) (VCContai
 		return nil, err
 	}
 
-	return s.StopContainer(containerID, false)
+	return s.StopContainer(ctx, containerID, false)
 }
 
 // EnterContainer is the virtcontainers container command execution entry point.
@@ -500,7 +500,7 @@ func EnterContainer(ctx context.Context, sandboxID, containerID string, cmd type
 		return nil, nil, nil, err
 	}
 
-	c, process, err := s.EnterContainer(containerID, cmd)
+	c, process, err := s.EnterContainer(ctx, containerID, cmd)
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -579,7 +579,7 @@ func KillContainer(ctx context.Context, sandboxID, containerID string, signal sy
 		return err
 	}
 
-	return s.KillContainer(containerID, signal, all)
+	return s.KillContainer(ctx, containerID, signal, all)
 }
 
 // ProcessListContainer is the virtcontainers entry point to list
@@ -607,7 +607,7 @@ func ProcessListContainer(ctx context.Context, sandboxID, containerID string, op
 		return nil, err
 	}
 
-	return s.ProcessListContainer(containerID, options)
+	return s.ProcessListContainer(ctx, containerID, options)
 }
 
 // UpdateContainer is the virtcontainers entry point to update
@@ -635,7 +635,7 @@ func UpdateContainer(ctx context.Context, sandboxID, containerID string, resourc
 		return err
 	}
 
-	return s.UpdateContainer(containerID, resources)
+	return s.UpdateContainer(ctx, containerID, resources)
 }
 
 // StatsContainer is the virtcontainers container stats entry point.
@@ -663,7 +663,7 @@ func StatsContainer(ctx context.Context, sandboxID, containerID string) (Contain
 		return ContainerStats{}, err
 	}
 
-	return s.StatsContainer(containerID)
+	return s.StatsContainer(ctx, containerID)
 }
 
 // StatsSandbox is the virtcontainers sandbox stats entry point.
@@ -687,14 +687,14 @@ func StatsSandbox(ctx context.Context, sandboxID string) (SandboxStats, []Contai
 		return SandboxStats{}, []ContainerStats{}, err
 	}
 
-	sandboxStats, err := s.Stats()
+	sandboxStats, err := s.Stats(ctx)
 	if err != nil {
 		return SandboxStats{}, []ContainerStats{}, err
 	}
 
 	containerStats := []ContainerStats{}
 	for _, c := range s.containers {
-		cstats, err := s.StatsContainer(c.id)
+		cstats, err := s.StatsContainer(ctx, c.id)
 		if err != nil {
 			return SandboxStats{}, []ContainerStats{}, err
 		}
@@ -725,10 +725,10 @@ func togglePauseContainer(ctx context.Context, sandboxID, containerID string, pa
 	}
 
 	if pause {
-		return s.PauseContainer(containerID)
+		return s.PauseContainer(ctx, containerID)
 	}
 
-	return s.ResumeContainer(containerID)
+	return s.ResumeContainer(ctx, containerID)
 }
 
 // PauseContainer is the virtcontainers container pause entry point.
@@ -767,7 +767,7 @@ func AddDevice(ctx context.Context, sandboxID string, info deviceConfig.DeviceIn
 		return nil, err
 	}
 
-	return s.AddDevice(info)
+	return s.AddDevice(ctx, info)
 }
 
 func toggleInterface(ctx context.Context, sandboxID string, inf *pbTypes.Interface, add bool) (*pbTypes.Interface, error) {
@@ -787,10 +787,10 @@ func toggleInterface(ctx context.Context, sandboxID string, inf *pbTypes.Interfa
 	}
 
 	if add {
-		return s.AddInterface(inf)
+		return s.AddInterface(ctx, inf)
 	}
 
-	return s.RemoveInterface(inf)
+	return s.RemoveInterface(ctx, inf)
 }
 
 // AddInterface is the virtcontainers add interface entry point.
@@ -829,7 +829,7 @@ func ListInterfaces(ctx context.Context, sandboxID string) ([]*pbTypes.Interface
 		return nil, err
 	}
 
-	return s.ListInterfaces()
+	return s.ListInterfaces(ctx)
 }
 
 // UpdateRoutes is the virtcontainers update routes entry point.
@@ -852,7 +852,7 @@ func UpdateRoutes(ctx context.Context, sandboxID string, routes []*pbTypes.Route
 		return nil, err
 	}
 
-	return s.UpdateRoutes(routes)
+	return s.UpdateRoutes(ctx, routes)
 }
 
 // ListRoutes is the virtcontainers list routes entry point.
@@ -875,7 +875,7 @@ func ListRoutes(ctx context.Context, sandboxID string) ([]*pbTypes.Route, error)
 		return nil, err
 	}
 
-	return s.ListRoutes()
+	return s.ListRoutes(ctx)
 }
 
 // CleanupContaienr is used by shimv2 to stop and delete a container exclusively, once there is no container
