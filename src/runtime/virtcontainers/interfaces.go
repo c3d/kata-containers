@@ -48,11 +48,11 @@ type VC interface {
 
 	AddDevice(ctx context.Context, sandboxID string, info config.DeviceInfo) (api.Device, error)
 
-	AddInterface(ctx context.Context, sandboxID string, inf *vcTypes.Interface) (*vcTypes.Interface, error)
-	RemoveInterface(ctx context.Context, sandboxID string, inf *vcTypes.Interface) (*vcTypes.Interface, error)
-	ListInterfaces(ctx context.Context, sandboxID string) ([]*vcTypes.Interface, error)
-	UpdateRoutes(ctx context.Context, sandboxID string, routes []*vcTypes.Route) ([]*vcTypes.Route, error)
-	ListRoutes(ctx context.Context, sandboxID string) ([]*vcTypes.Route, error)
+	AddInterface(ctx context.Context, sandboxID string, inf *pbTypes.Interface) (*pbTypes.Interface, error)
+	RemoveInterface(ctx context.Context, sandboxID string, inf *pbTypes.Interface) (*pbTypes.Interface, error)
+	ListInterfaces(ctx context.Context, sandboxID string) ([]*pbTypes.Interface, error)
+	UpdateRoutes(ctx context.Context, sandboxID string, routes []*pbTypes.Route) ([]*pbTypes.Route, error)
+	ListRoutes(ctx context.Context, sandboxID string) ([]*pbTypes.Route, error)
 
 	CleanupContainer(ctx context.Context, sandboxID, containerID string, force bool) error
 }

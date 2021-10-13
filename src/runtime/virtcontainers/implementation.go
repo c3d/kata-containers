@@ -15,7 +15,7 @@ import (
 
 	"github.com/kata-containers/kata-containers/src/runtime/virtcontainers/device/api"
 	"github.com/kata-containers/kata-containers/src/runtime/virtcontainers/device/config"
-	vcTypes "github.com/kata-containers/kata-containers/src/runtime/virtcontainers/pkg/types"
+	pbTypes "github.com/kata-containers/kata-containers/src/runtime/virtcontainers/pkg/agent/protocols"
 	"github.com/kata-containers/kata-containers/src/runtime/virtcontainers/types"
 	specs "github.com/opencontainers/runtime-spec/specs-go"
 	"github.com/sirupsen/logrus"
@@ -148,27 +148,27 @@ func (impl *VCImpl) AddDevice(ctx context.Context, sandboxID string, info config
 }
 
 // AddInterface implements the VC function of the same name.
-func (impl *VCImpl) AddInterface(ctx context.Context, sandboxID string, inf *vcTypes.Interface) (*vcTypes.Interface, error) {
+func (impl *VCImpl) AddInterface(ctx context.Context, sandboxID string, inf *pbTypes.Interface) (*pbTypes.Interface, error) {
 	return AddInterface(ctx, sandboxID, inf)
 }
 
 // RemoveInterface implements the VC function of the same name.
-func (impl *VCImpl) RemoveInterface(ctx context.Context, sandboxID string, inf *vcTypes.Interface) (*vcTypes.Interface, error) {
+func (impl *VCImpl) RemoveInterface(ctx context.Context, sandboxID string, inf *pbTypes.Interface) (*pbTypes.Interface, error) {
 	return RemoveInterface(ctx, sandboxID, inf)
 }
 
 // ListInterfaces implements the VC function of the same name.
-func (impl *VCImpl) ListInterfaces(ctx context.Context, sandboxID string) ([]*vcTypes.Interface, error) {
+func (impl *VCImpl) ListInterfaces(ctx context.Context, sandboxID string) ([]*pbTypes.Interface, error) {
 	return ListInterfaces(ctx, sandboxID)
 }
 
 // UpdateRoutes implements the VC function of the same name.
-func (impl *VCImpl) UpdateRoutes(ctx context.Context, sandboxID string, routes []*vcTypes.Route) ([]*vcTypes.Route, error) {
+func (impl *VCImpl) UpdateRoutes(ctx context.Context, sandboxID string, routes []*pbTypes.Route) ([]*pbTypes.Route, error) {
 	return UpdateRoutes(ctx, sandboxID, routes)
 }
 
 // ListRoutes implements the VC function of the same name.
-func (impl *VCImpl) ListRoutes(ctx context.Context, sandboxID string) ([]*vcTypes.Route, error) {
+func (impl *VCImpl) ListRoutes(ctx context.Context, sandboxID string) ([]*pbTypes.Route, error) {
 	return ListRoutes(ctx, sandboxID)
 }
 
