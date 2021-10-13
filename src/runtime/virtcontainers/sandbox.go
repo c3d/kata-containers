@@ -695,6 +695,15 @@ func (s *Sandbox) storeSandbox(ctx context.Context) error {
 	return nil
 }
 
+func rLockSandbox(sandboxID string) (func() error, error) {
+	store, err := persist.GetDriver()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get fs persist driver: %v", err)
+	}
+
+	return store.Lock(sandboxID, false)
+}
+
 func rwLockSandbox(sandboxID string) (func() error, error) {
 	store, err := persist.GetDriver()
 	if err != nil {
