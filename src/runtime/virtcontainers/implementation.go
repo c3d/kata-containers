@@ -4,7 +4,7 @@
 //
 
 // Description: The true virtcontainers function of the same name.
-// This indirection is required to allow an alternative implemenation to be
+// This indirection is required to allow an alternative implementation to be
 // used for testing purposes.
 
 package virtcontainers
