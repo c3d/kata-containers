@@ -593,6 +593,7 @@ type VCSandbox interface {
 	ResumeContainer(ctx context.Context, containerID string) error
 	EnterContainer(ctx context.Context, containerID string, cmd types.Cmd) (VCContainer, *Process, error)
 	UpdateContainer(ctx context.Context, containerID string, resources specs.LinuxResources) error
+	ProcessListContainer(ctx context.Context, containerID string, options ProcessListOptions) (ProcessList, error)
 	WaitProcess(ctx context.Context, containerID, processID string) (int32, error)
 	SignalProcess(ctx context.Context, containerID, processID string, signal syscall.Signal, all bool) error
 	WinsizeProcess(ctx context.Context, containerID, processID string, height, width uint32) error
@@ -927,6 +928,7 @@ type VCContainer interface {
 * [`EnterContainer`](#entercontainer)
 * [`StatusContainer`](#statuscontainer)
 * [`KillContainer`](#killcontainer)
+* [`ProcessListContainer`](#processlistcontainer)
 * [`StatsContainer`](#statscontainer)
 * [`PauseContainer`](#pausecontainer)
 * [`ResumeContainer`](#resumecontainer)
@@ -985,6 +987,13 @@ func (s *Sandbox) StatusContainer(containerID string) (ContainerStatus, error)
 // to a container running inside a sandbox. If all is true, all processes in
 // the container will be sent the signal.
 func (s *Sandbox) KillContainer(ctx context.Context, containerID string, signal syscall.Signal, all bool) error
+```
+
+#### `ProcessListContainer`
+```Go
+// ProcessListContainer is the virtcontainers entry point to list
+// processes running inside a container
+func ProcessListContainer(sandboxID, containerID string, options ProcessListOptions) (ProcessList, error)
 ```
 
 #### `StatsContainer`

@@ -328,6 +328,88 @@ func (m *WaitProcessResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_WaitProcessResponse proto.InternalMessageInfo
 
+// ListProcessesRequest contains the options used to list running processes inside the container
+type ListProcessesRequest struct {
+	ContainerId          string   `protobuf:"bytes,1,opt,name=container_id,json=containerId,proto3" json:"container_id,omitempty"`
+	Format               string   `protobuf:"bytes,2,opt,name=format,proto3" json:"format,omitempty"`
+	Args                 []string `protobuf:"bytes,3,rep,name=args,proto3" json:"args,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ListProcessesRequest) Reset()      { *m = ListProcessesRequest{} }
+func (*ListProcessesRequest) ProtoMessage() {}
+func (*ListProcessesRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c1460208c38ccf5e, []int{7}
+}
+func (m *ListProcessesRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ListProcessesRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ListProcessesRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *ListProcessesRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListProcessesRequest.Merge(m, src)
+}
+func (m *ListProcessesRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *ListProcessesRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListProcessesRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListProcessesRequest proto.InternalMessageInfo
+
+// ListProcessesResponse represents the list of running processes inside the container
+type ListProcessesResponse struct {
+	ProcessList          []byte   `protobuf:"bytes,1,opt,name=process_list,json=processList,proto3" json:"process_list,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ListProcessesResponse) Reset()      { *m = ListProcessesResponse{} }
+func (*ListProcessesResponse) ProtoMessage() {}
+func (*ListProcessesResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c1460208c38ccf5e, []int{8}
+}
+func (m *ListProcessesResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ListProcessesResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ListProcessesResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *ListProcessesResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListProcessesResponse.Merge(m, src)
+}
+func (m *ListProcessesResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *ListProcessesResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListProcessesResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListProcessesResponse proto.InternalMessageInfo
+
 type UpdateContainerRequest struct {
 	ContainerId          string          `protobuf:"bytes,1,opt,name=container_id,json=containerId,proto3" json:"container_id,omitempty"`
 	Resources            *LinuxResources `protobuf:"bytes,2,opt,name=resources,proto3" json:"resources,omitempty"`
@@ -339,7 +421,7 @@ type UpdateContainerRequest struct {
 func (m *UpdateContainerRequest) Reset()      { *m = UpdateContainerRequest{} }
 func (*UpdateContainerRequest) ProtoMessage() {}
 func (*UpdateContainerRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{7}
+	return fileDescriptor_c1460208c38ccf5e, []int{9}
 }
 func (m *UpdateContainerRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -378,7 +460,7 @@ type StatsContainerRequest struct {
 func (m *StatsContainerRequest) Reset()      { *m = StatsContainerRequest{} }
 func (*StatsContainerRequest) ProtoMessage() {}
 func (*StatsContainerRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{8}
+	return fileDescriptor_c1460208c38ccf5e, []int{10}
 }
 func (m *StatsContainerRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -417,7 +499,7 @@ type PauseContainerRequest struct {
 func (m *PauseContainerRequest) Reset()      { *m = PauseContainerRequest{} }
 func (*PauseContainerRequest) ProtoMessage() {}
 func (*PauseContainerRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{9}
+	return fileDescriptor_c1460208c38ccf5e, []int{11}
 }
 func (m *PauseContainerRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -456,7 +538,7 @@ type ResumeContainerRequest struct {
 func (m *ResumeContainerRequest) Reset()      { *m = ResumeContainerRequest{} }
 func (*ResumeContainerRequest) ProtoMessage() {}
 func (*ResumeContainerRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{10}
+	return fileDescriptor_c1460208c38ccf5e, []int{12}
 }
 func (m *ResumeContainerRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -498,7 +580,7 @@ type CpuUsage struct {
 func (m *CpuUsage) Reset()      { *m = CpuUsage{} }
 func (*CpuUsage) ProtoMessage() {}
 func (*CpuUsage) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{11}
+	return fileDescriptor_c1460208c38ccf5e, []int{13}
 }
 func (m *CpuUsage) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -539,7 +621,7 @@ type ThrottlingData struct {
 func (m *ThrottlingData) Reset()      { *m = ThrottlingData{} }
 func (*ThrottlingData) ProtoMessage() {}
 func (*ThrottlingData) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{12}
+	return fileDescriptor_c1460208c38ccf5e, []int{14}
 }
 func (m *ThrottlingData) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -579,7 +661,7 @@ type CpuStats struct {
 func (m *CpuStats) Reset()      { *m = CpuStats{} }
 func (*CpuStats) ProtoMessage() {}
 func (*CpuStats) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{13}
+	return fileDescriptor_c1460208c38ccf5e, []int{15}
 }
 func (m *CpuStats) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -619,7 +701,7 @@ type PidsStats struct {
 func (m *PidsStats) Reset()      { *m = PidsStats{} }
 func (*PidsStats) ProtoMessage() {}
 func (*PidsStats) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{14}
+	return fileDescriptor_c1460208c38ccf5e, []int{16}
 }
 func (m *PidsStats) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -661,7 +743,7 @@ type MemoryData struct {
 func (m *MemoryData) Reset()      { *m = MemoryData{} }
 func (*MemoryData) ProtoMessage() {}
 func (*MemoryData) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{15}
+	return fileDescriptor_c1460208c38ccf5e, []int{17}
 }
 func (m *MemoryData) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -705,7 +787,7 @@ type MemoryStats struct {
 func (m *MemoryStats) Reset()      { *m = MemoryStats{} }
 func (*MemoryStats) ProtoMessage() {}
 func (*MemoryStats) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{16}
+	return fileDescriptor_c1460208c38ccf5e, []int{18}
 }
 func (m *MemoryStats) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -747,7 +829,7 @@ type BlkioStatsEntry struct {
 func (m *BlkioStatsEntry) Reset()      { *m = BlkioStatsEntry{} }
 func (*BlkioStatsEntry) ProtoMessage() {}
 func (*BlkioStatsEntry) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{17}
+	return fileDescriptor_c1460208c38ccf5e, []int{19}
 }
 func (m *BlkioStatsEntry) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -793,7 +875,7 @@ type BlkioStats struct {
 func (m *BlkioStats) Reset()      { *m = BlkioStats{} }
 func (*BlkioStats) ProtoMessage() {}
 func (*BlkioStats) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{18}
+	return fileDescriptor_c1460208c38ccf5e, []int{20}
 }
 func (m *BlkioStats) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -834,7 +916,7 @@ type HugetlbStats struct {
 func (m *HugetlbStats) Reset()      { *m = HugetlbStats{} }
 func (*HugetlbStats) ProtoMessage() {}
 func (*HugetlbStats) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{19}
+	return fileDescriptor_c1460208c38ccf5e, []int{21}
 }
 func (m *HugetlbStats) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -877,7 +959,7 @@ type CgroupStats struct {
 func (m *CgroupStats) Reset()      { *m = CgroupStats{} }
 func (*CgroupStats) ProtoMessage() {}
 func (*CgroupStats) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{20}
+	return fileDescriptor_c1460208c38ccf5e, []int{22}
 }
 func (m *CgroupStats) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -924,7 +1006,7 @@ type NetworkStats struct {
 func (m *NetworkStats) Reset()      { *m = NetworkStats{} }
 func (*NetworkStats) ProtoMessage() {}
 func (*NetworkStats) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{21}
+	return fileDescriptor_c1460208c38ccf5e, []int{23}
 }
 func (m *NetworkStats) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -964,7 +1046,7 @@ type StatsContainerResponse struct {
 func (m *StatsContainerResponse) Reset()      { *m = StatsContainerResponse{} }
 func (*StatsContainerResponse) ProtoMessage() {}
 func (*StatsContainerResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{22}
+	return fileDescriptor_c1460208c38ccf5e, []int{24}
 }
 func (m *StatsContainerResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1005,7 +1087,7 @@ type WriteStreamRequest struct {
 func (m *WriteStreamRequest) Reset()      { *m = WriteStreamRequest{} }
 func (*WriteStreamRequest) ProtoMessage() {}
 func (*WriteStreamRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{23}
+	return fileDescriptor_c1460208c38ccf5e, []int{25}
 }
 func (m *WriteStreamRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1044,7 +1126,7 @@ type WriteStreamResponse struct {
 func (m *WriteStreamResponse) Reset()      { *m = WriteStreamResponse{} }
 func (*WriteStreamResponse) ProtoMessage() {}
 func (*WriteStreamResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{24}
+	return fileDescriptor_c1460208c38ccf5e, []int{26}
 }
 func (m *WriteStreamResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1085,7 +1167,7 @@ type ReadStreamRequest struct {
 func (m *ReadStreamRequest) Reset()      { *m = ReadStreamRequest{} }
 func (*ReadStreamRequest) ProtoMessage() {}
 func (*ReadStreamRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{25}
+	return fileDescriptor_c1460208c38ccf5e, []int{27}
 }
 func (m *ReadStreamRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1124,7 +1206,7 @@ type ReadStreamResponse struct {
 func (m *ReadStreamResponse) Reset()      { *m = ReadStreamResponse{} }
 func (*ReadStreamResponse) ProtoMessage() {}
 func (*ReadStreamResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{26}
+	return fileDescriptor_c1460208c38ccf5e, []int{28}
 }
 func (m *ReadStreamResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1164,7 +1246,7 @@ type CloseStdinRequest struct {
 func (m *CloseStdinRequest) Reset()      { *m = CloseStdinRequest{} }
 func (*CloseStdinRequest) ProtoMessage() {}
 func (*CloseStdinRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{27}
+	return fileDescriptor_c1460208c38ccf5e, []int{29}
 }
 func (m *CloseStdinRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1206,7 +1288,7 @@ type TtyWinResizeRequest struct {
 func (m *TtyWinResizeRequest) Reset()      { *m = TtyWinResizeRequest{} }
 func (*TtyWinResizeRequest) ProtoMessage() {}
 func (*TtyWinResizeRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{28}
+	return fileDescriptor_c1460208c38ccf5e, []int{30}
 }
 func (m *TtyWinResizeRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1249,7 +1331,7 @@ type KernelModule struct {
 func (m *KernelModule) Reset()      { *m = KernelModule{} }
 func (*KernelModule) ProtoMessage() {}
 func (*KernelModule) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{29}
+	return fileDescriptor_c1460208c38ccf5e, []int{31}
 }
 func (m *KernelModule) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1304,7 +1386,7 @@ type CreateSandboxRequest struct {
 func (m *CreateSandboxRequest) Reset()      { *m = CreateSandboxRequest{} }
 func (*CreateSandboxRequest) ProtoMessage() {}
 func (*CreateSandboxRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{30}
+	return fileDescriptor_c1460208c38ccf5e, []int{32}
 }
 func (m *CreateSandboxRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1342,7 +1424,7 @@ type DestroySandboxRequest struct {
 func (m *DestroySandboxRequest) Reset()      { *m = DestroySandboxRequest{} }
 func (*DestroySandboxRequest) ProtoMessage() {}
 func (*DestroySandboxRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{31}
+	return fileDescriptor_c1460208c38ccf5e, []int{33}
 }
 func (m *DestroySandboxRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1381,7 +1463,7 @@ type Interfaces struct {
 func (m *Interfaces) Reset()      { *m = Interfaces{} }
 func (*Interfaces) ProtoMessage() {}
 func (*Interfaces) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{32}
+	return fileDescriptor_c1460208c38ccf5e, []int{34}
 }
 func (m *Interfaces) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1420,7 +1502,7 @@ type Routes struct {
 func (m *Routes) Reset()      { *m = Routes{} }
 func (*Routes) ProtoMessage() {}
 func (*Routes) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{33}
+	return fileDescriptor_c1460208c38ccf5e, []int{35}
 }
 func (m *Routes) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1459,7 +1541,7 @@ type UpdateInterfaceRequest struct {
 func (m *UpdateInterfaceRequest) Reset()      { *m = UpdateInterfaceRequest{} }
 func (*UpdateInterfaceRequest) ProtoMessage() {}
 func (*UpdateInterfaceRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{34}
+	return fileDescriptor_c1460208c38ccf5e, []int{36}
 }
 func (m *UpdateInterfaceRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1498,7 +1580,7 @@ type UpdateRoutesRequest struct {
 func (m *UpdateRoutesRequest) Reset()      { *m = UpdateRoutesRequest{} }
 func (*UpdateRoutesRequest) ProtoMessage() {}
 func (*UpdateRoutesRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{35}
+	return fileDescriptor_c1460208c38ccf5e, []int{37}
 }
 func (m *UpdateRoutesRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1536,7 +1618,7 @@ type ListInterfacesRequest struct {
 func (m *ListInterfacesRequest) Reset()      { *m = ListInterfacesRequest{} }
 func (*ListInterfacesRequest) ProtoMessage() {}
 func (*ListInterfacesRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{36}
+	return fileDescriptor_c1460208c38ccf5e, []int{38}
 }
 func (m *ListInterfacesRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1574,7 +1656,7 @@ type ListRoutesRequest struct {
 func (m *ListRoutesRequest) Reset()      { *m = ListRoutesRequest{} }
 func (*ListRoutesRequest) ProtoMessage() {}
 func (*ListRoutesRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{37}
+	return fileDescriptor_c1460208c38ccf5e, []int{39}
 }
 func (m *ListRoutesRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1613,7 +1695,7 @@ type ARPNeighbors struct {
 func (m *ARPNeighbors) Reset()      { *m = ARPNeighbors{} }
 func (*ARPNeighbors) ProtoMessage() {}
 func (*ARPNeighbors) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{38}
+	return fileDescriptor_c1460208c38ccf5e, []int{40}
 }
 func (m *ARPNeighbors) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1652,7 +1734,7 @@ type AddARPNeighborsRequest struct {
 func (m *AddARPNeighborsRequest) Reset()      { *m = AddARPNeighborsRequest{} }
 func (*AddARPNeighborsRequest) ProtoMessage() {}
 func (*AddARPNeighborsRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{39}
+	return fileDescriptor_c1460208c38ccf5e, []int{41}
 }
 func (m *AddARPNeighborsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1698,7 +1780,7 @@ type OnlineCPUMemRequest struct {
 func (m *OnlineCPUMemRequest) Reset()      { *m = OnlineCPUMemRequest{} }
 func (*OnlineCPUMemRequest) ProtoMessage() {}
 func (*OnlineCPUMemRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{40}
+	return fileDescriptor_c1460208c38ccf5e, []int{42}
 }
 func (m *OnlineCPUMemRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1738,7 +1820,7 @@ type ReseedRandomDevRequest struct {
 func (m *ReseedRandomDevRequest) Reset()      { *m = ReseedRandomDevRequest{} }
 func (*ReseedRandomDevRequest) ProtoMessage() {}
 func (*ReseedRandomDevRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{41}
+	return fileDescriptor_c1460208c38ccf5e, []int{43}
 }
 func (m *ReseedRandomDevRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1788,7 +1870,7 @@ type AgentDetails struct {
 func (m *AgentDetails) Reset()      { *m = AgentDetails{} }
 func (*AgentDetails) ProtoMessage() {}
 func (*AgentDetails) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{42}
+	return fileDescriptor_c1460208c38ccf5e, []int{44}
 }
 func (m *AgentDetails) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1834,7 +1916,7 @@ type GuestDetailsRequest struct {
 func (m *GuestDetailsRequest) Reset()      { *m = GuestDetailsRequest{} }
 func (*GuestDetailsRequest) ProtoMessage() {}
 func (*GuestDetailsRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{43}
+	return fileDescriptor_c1460208c38ccf5e, []int{45}
 }
 func (m *GuestDetailsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1876,7 +1958,7 @@ type GuestDetailsResponse struct {
 func (m *GuestDetailsResponse) Reset()      { *m = GuestDetailsResponse{} }
 func (*GuestDetailsResponse) ProtoMessage() {}
 func (*GuestDetailsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{44}
+	return fileDescriptor_c1460208c38ccf5e, []int{46}
 }
 func (m *GuestDetailsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1917,7 +1999,7 @@ type MemHotplugByProbeRequest struct {
 func (m *MemHotplugByProbeRequest) Reset()      { *m = MemHotplugByProbeRequest{} }
 func (*MemHotplugByProbeRequest) ProtoMessage() {}
 func (*MemHotplugByProbeRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{45}
+	return fileDescriptor_c1460208c38ccf5e, []int{47}
 }
 func (m *MemHotplugByProbeRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1959,7 +2041,7 @@ type SetGuestDateTimeRequest struct {
 func (m *SetGuestDateTimeRequest) Reset()      { *m = SetGuestDateTimeRequest{} }
 func (*SetGuestDateTimeRequest) ProtoMessage() {}
 func (*SetGuestDateTimeRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{46}
+	return fileDescriptor_c1460208c38ccf5e, []int{48}
 }
 func (m *SetGuestDateTimeRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -2024,7 +2106,7 @@ type Storage struct {
 func (m *Storage) Reset()      { *m = Storage{} }
 func (*Storage) ProtoMessage() {}
 func (*Storage) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{47}
+	return fileDescriptor_c1460208c38ccf5e, []int{49}
 }
 func (m *Storage) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -2095,7 +2177,7 @@ type Device struct {
 func (m *Device) Reset()      { *m = Device{} }
 func (*Device) ProtoMessage() {}
 func (*Device) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{48}
+	return fileDescriptor_c1460208c38ccf5e, []int{50}
 }
 func (m *Device) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -2136,7 +2218,7 @@ type StringUser struct {
 func (m *StringUser) Reset()      { *m = StringUser{} }
 func (*StringUser) ProtoMessage() {}
 func (*StringUser) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{49}
+	return fileDescriptor_c1460208c38ccf5e, []int{51}
 }
 func (m *StringUser) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -2193,7 +2275,7 @@ type CopyFileRequest struct {
 func (m *CopyFileRequest) Reset()      { *m = CopyFileRequest{} }
 func (*CopyFileRequest) ProtoMessage() {}
 func (*CopyFileRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c1460208c38ccf5e, []int{50}
+	return fileDescriptor_c1460208c38ccf5e, []int{52}
 }
 func (m *CopyFileRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -2423,6 +2505,8 @@ func init() {
 	proto.RegisterType((*SignalProcessRequest)(nil), "grpc.SignalProcessRequest")
 	proto.RegisterType((*WaitProcessRequest)(nil), "grpc.WaitProcessRequest")
 	proto.RegisterType((*WaitProcessResponse)(nil), "grpc.WaitProcessResponse")
+	proto.RegisterType((*ListProcessesRequest)(nil), "grpc.ListProcessesRequest")
+	proto.RegisterType((*ListProcessesResponse)(nil), "grpc.ListProcessesResponse")
 	proto.RegisterType((*UpdateContainerRequest)(nil), "grpc.UpdateContainerRequest")
 	proto.RegisterType((*StatsContainerRequest)(nil), "grpc.StatsContainerRequest")
 	proto.RegisterType((*PauseContainerRequest)(nil), "grpc.PauseContainerRequest")
@@ -3026,6 +3110,90 @@ func (m *WaitProcessResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintAgent(dAtA, i, uint64(m.Status))
 		i--
 		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *ListProcessesRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ListProcessesRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *ListProcessesRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		i -= len(m.XXX_unrecognized)
+		copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	if len(m.Args) > 0 {
+		for iNdEx := len(m.Args) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.Args[iNdEx])
+			copy(dAtA[i:], m.Args[iNdEx])
+			i = encodeVarintAgent(dAtA, i, uint64(len(m.Args[iNdEx])))
+			i--
+			dAtA[i] = 0x1a
+		}
+	}
+	if len(m.Format) > 0 {
+		i -= len(m.Format)
+		copy(dAtA[i:], m.Format)
+		i = encodeVarintAgent(dAtA, i, uint64(len(m.Format)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.ContainerId) > 0 {
+		i -= len(m.ContainerId)
+		copy(dAtA[i:], m.ContainerId)
+		i = encodeVarintAgent(dAtA, i, uint64(len(m.ContainerId)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *ListProcessesResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ListProcessesResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *ListProcessesResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		i -= len(m.XXX_unrecognized)
+		copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	if len(m.ProcessList) > 0 {
+		i -= len(m.ProcessList)
+		copy(dAtA[i:], m.ProcessList)
+		i = encodeVarintAgent(dAtA, i, uint64(len(m.ProcessList)))
+		i--
+		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
@@ -5620,6 +5788,48 @@ func (m *WaitProcessResponse) Size() (n int) {
 	return n
 }
 
+func (m *ListProcessesRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ContainerId)
+	if l > 0 {
+		n += 1 + l + sovAgent(uint64(l))
+	}
+	l = len(m.Format)
+	if l > 0 {
+		n += 1 + l + sovAgent(uint64(l))
+	}
+	if len(m.Args) > 0 {
+		for _, s := range m.Args {
+			l = len(s)
+			n += 1 + l + sovAgent(uint64(l))
+		}
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *ListProcessesResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ProcessList)
+	if l > 0 {
+		n += 1 + l + sovAgent(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
 func (m *UpdateContainerRequest) Size() (n int) {
 	if m == nil {
 		return 0
@@ -6842,6 +7052,30 @@ func (this *WaitProcessResponse) String() string {
 	}, "")
 	return s
 }
+func (this *ListProcessesRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&ListProcessesRequest{`,
+		`ContainerId:` + fmt.Sprintf("%v", this.ContainerId) + `,`,
+		`Format:` + fmt.Sprintf("%v", this.Format) + `,`,
+		`Args:` + fmt.Sprintf("%v", this.Args) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *ListProcessesResponse) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&ListProcessesResponse{`,
+		`ProcessList:` + fmt.Sprintf("%v", this.ProcessList) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
 func (this *UpdateContainerRequest) String() string {
 	if this == nil {
 		return "nil"
@@ -7566,6 +7800,7 @@ type AgentServiceService interface {
 	ExecProcess(ctx context.Context, req *ExecProcessRequest) (*types.Empty, error)
 	SignalProcess(ctx context.Context, req *SignalProcessRequest) (*types.Empty, error)
 	WaitProcess(ctx context.Context, req *WaitProcessRequest) (*WaitProcessResponse, error)
+	ListProcesses(ctx context.Context, req *ListProcessesRequest) (*ListProcessesResponse, error)
 	UpdateContainer(ctx context.Context, req *UpdateContainerRequest) (*types.Empty, error)
 	StatsContainer(ctx context.Context, req *StatsContainerRequest) (*StatsContainerResponse, error)
 	PauseContainer(ctx context.Context, req *PauseContainerRequest) (*types.Empty, error)
@@ -7636,6 +7871,13 @@ func RegisterAgentServiceService(srv *github_com_containerd_ttrpc.Server, svc Ag
 				return nil, err
 			}
 			return svc.WaitProcess(ctx, &req)
+		},
+		"ListProcesses": func(ctx context.Context, unmarshal func(interface{}) error) (interface{}, error) {
+			var req ListProcessesRequest
+			if err := unmarshal(&req); err != nil {
+				return nil, err
+			}
+			return svc.ListProcesses(ctx, &req)
 		},
 		"UpdateContainer": func(ctx context.Context, unmarshal func(interface{}) error) (interface{}, error) {
 			var req UpdateContainerRequest
@@ -7868,6 +8110,14 @@ func (c *agentServiceClient) SignalProcess(ctx context.Context, req *SignalProce
 func (c *agentServiceClient) WaitProcess(ctx context.Context, req *WaitProcessRequest) (*WaitProcessResponse, error) {
 	var resp WaitProcessResponse
 	if err := c.client.Call(ctx, "grpc.AgentService", "WaitProcess", req, &resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *agentServiceClient) ListProcesses(ctx context.Context, req *ListProcessesRequest) (*ListProcessesResponse, error) {
+	var resp ListProcessesResponse
+	if err := c.client.Call(ctx, "grpc.AgentService", "ListProcesses", req, &resp); err != nil {
 		return nil, err
 	}
 	return &resp, nil
@@ -9023,6 +9273,244 @@ func (m *WaitProcessResponse) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthAgent
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ListProcessesRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowAgent
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ListProcessesRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ListProcessesRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ContainerId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowAgent
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthAgent
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthAgent
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ContainerId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Format", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowAgent
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthAgent
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthAgent
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Format = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Args", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowAgent
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthAgent
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthAgent
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Args = append(m.Args, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipAgent(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthAgent
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthAgent
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ListProcessesResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowAgent
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ListProcessesResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ListProcessesResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ProcessList", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowAgent
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthAgent
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthAgent
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ProcessList = append(m.ProcessList[:0], dAtA[iNdEx:postIndex]...)
+			if m.ProcessList == nil {
+				m.ProcessList = []byte{}
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipAgent(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthAgent
+			}
+			if (iNdEx + skippy) < 0 {
 				return ErrInvalidLengthAgent
 			}
 			if (iNdEx + skippy) > l {
