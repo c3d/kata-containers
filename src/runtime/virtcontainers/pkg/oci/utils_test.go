@@ -188,6 +188,209 @@ func TestMinimalSandboxConfig(t *testing.T) {
 	assert.NoError(os.Remove(configPath))
 }
 
+func testStatusToOCIStateSuccessful(t *testing.T, cStatus vc.ContainerStatus, expected specs.State) {
+	ociState := StatusToOCIState(cStatus)
+	assert.Exactly(t, ociState, expected)
+}
+
+func TestStatusToOCIStateSuccessfulWithReadyState(t *testing.T) {
+
+	testContID := "testContID"
+	testPID := 12345
+	testRootFs := "testRootFs"
+
+	state := types.ContainerState{
+		State: types.StateReady,
+	}
+
+	containerAnnotations := map[string]string{
+		vcAnnotations.BundlePathKey: tempBundlePath,
+	}
+
+	cStatus := vc.ContainerStatus{
+		ID:          testContID,
+		State:       state,
+		PID:         testPID,
+		RootFs:      testRootFs,
+		Annotations: containerAnnotations,
+	}
+
+	expected := specs.State{
+		Version:     specs.Version,
+		ID:          testContID,
+		Status:      "created",
+		Pid:         testPID,
+		Bundle:      tempBundlePath,
+		Annotations: containerAnnotations,
+	}
+
+	testStatusToOCIStateSuccessful(t, cStatus, expected)
+
+}
+
+func TestStatusToOCIStateSuccessfulWithRunningState(t *testing.T) {
+
+	testContID := "testContID"
+	testPID := 12345
+	testRootFs := "testRootFs"
+
+	state := types.ContainerState{
+		State: types.StateRunning,
+	}
+
+	containerAnnotations := map[string]string{
+		vcAnnotations.BundlePathKey: tempBundlePath,
+	}
+
+	cStatus := vc.ContainerStatus{
+		ID:          testContID,
+		State:       state,
+		PID:         testPID,
+		RootFs:      testRootFs,
+		Annotations: containerAnnotations,
+	}
+
+	expected := specs.State{
+		Version:     specs.Version,
+		ID:          testContID,
+		Status:      "running",
+		Pid:         testPID,
+		Bundle:      tempBundlePath,
+		Annotations: containerAnnotations,
+	}
+
+	testStatusToOCIStateSuccessful(t, cStatus, expected)
+
+}
+
+func TestStatusToOCIStateSuccessfulWithStoppedState(t *testing.T) {
+	testContID := "testContID"
+	testPID := 12345
+	testRootFs := "testRootFs"
+
+	state := types.ContainerState{
+		State: types.StateStopped,
+	}
+
+	containerAnnotations := map[string]string{
+		vcAnnotations.BundlePathKey: tempBundlePath,
+	}
+
+	cStatus := vc.ContainerStatus{
+		ID:          testContID,
+		State:       state,
+		PID:         testPID,
+		RootFs:      testRootFs,
+		Annotations: containerAnnotations,
+	}
+
+	expected := specs.State{
+		Version:     specs.Version,
+		ID:          testContID,
+		Status:      "stopped",
+		Pid:         testPID,
+		Bundle:      tempBundlePath,
+		Annotations: containerAnnotations,
+	}
+
+	testStatusToOCIStateSuccessful(t, cStatus, expected)
+
+}
+
+func TestStatusToOCIStateSuccessfulWithNoState(t *testing.T) {
+	testContID := "testContID"
+	testPID := 12345
+	testRootFs := "testRootFs"
+
+	containerAnnotations := map[string]string{
+		vcAnnotations.BundlePathKey: tempBundlePath,
+	}
+
+	cStatus := vc.ContainerStatus{
+		ID:          testContID,
+		PID:         testPID,
+		RootFs:      testRootFs,
+		Annotations: containerAnnotations,
+	}
+
+	expected := specs.State{
+		Version:     specs.Version,
+		ID:          testContID,
+		Status:      "",
+		Pid:         testPID,
+		Bundle:      tempBundlePath,
+		Annotations: containerAnnotations,
+	}
+
+	testStatusToOCIStateSuccessful(t, cStatus, expected)
+
+}
+
+func TestStateToOCIState(t *testing.T) {
+	var state types.StateString
+	assert := assert.New(t)
+
+	assert.Empty(StateToOCIState(state))
+
+	state = types.StateReady
+	assert.Equal(StateToOCIState(state), "created")
+
+	state = types.StateRunning
+	assert.Equal(StateToOCIState(state), "running")
+
+	state = types.StateStopped
+	assert.Equal(StateToOCIState(state), "stopped")
+
+	state = types.StatePaused
+	assert.Equal(StateToOCIState(state), "paused")
+}
+
+func TestEnvVars(t *testing.T) {
+	assert := assert.New(t)
+	envVars := []string{"foo=bar", "TERM=xterm", "HOME=/home/foo", "TERM=\"bar\"", "foo=\"\""}
+	expectecVcEnvVars := []types.EnvVar{
+		{
+			Var:   "foo",
+			Value: "bar",
+		},
+		{
+			Var:   "TERM",
+			Value: "xterm",
+		},
+		{
+			Var:   "HOME",
+			Value: "/home/foo",
+		},
+		{
+			Var:   "TERM",
+			Value: "\"bar\"",
+		},
+		{
+			Var:   "foo",
+			Value: "\"\"",
+		},
+	}
+
+	vcEnvVars, err := EnvVars(envVars)
+	assert.NoError(err)
+	assert.Exactly(vcEnvVars, expectecVcEnvVars)
+}
+
+func TestMalformedEnvVars(t *testing.T) {
+	assert := assert.New(t)
+	envVars := []string{"foo"}
+	_, err := EnvVars(envVars)
+	assert.Error(err)
+
+	envVars = []string{"=foo"}
+	_, err = EnvVars(envVars)
+	assert.Error(err)
+
+	envVars = []string{"=foo="}
+	_, err = EnvVars(envVars)
+	assert.Error(err)
+}
+
 func testGetContainerTypeSuccessful(t *testing.T, annotations map[string]string, expected vc.ContainerType) {
 	assert := assert.New(t)
 	containerType, err := GetContainerType(annotations)

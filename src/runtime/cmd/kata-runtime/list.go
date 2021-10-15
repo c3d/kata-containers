@@ -22,6 +22,7 @@ import (
 	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils"
 	vc "github.com/kata-containers/kata-containers/src/runtime/virtcontainers"
 	oci "github.com/kata-containers/kata-containers/src/runtime/virtcontainers/pkg/oci"
+	specs "github.com/opencontainers/runtime-spec/specs-go"
 )
 
 const formatOptions = `table or json`
@@ -36,7 +37,7 @@ type containerState struct {
 	// InitProcessPid is the init process id in the parent namespace
 	InitProcessPid int `json:"pid"`
 	// Status is the current status of the container, running, paused, ...
-	Status string `json:"status"`
+	Status specs.ContainerState `json:"status"`
 	// Bundle is the path on the filesystem to the bundle
 	Bundle string `json:"bundle"`
 	// Rootfs is a path to a directory containing the container's root filesystem.

@@ -1020,6 +1020,77 @@ func getShmSize(c vc.ContainerConfig) (uint64, error) {
 	return shmSize, nil
 }
 
+// StatusToOCIState translates a virtcontainers container status into an OCI state.
+func StatusToOCIState(status vc.ContainerStatus) specs.State {
+	return specs.State{
+		Version:     specs.Version,
+		ID:          status.ID,
+		Status:      StateToOCIState(status.State.State),
+		Pid:         status.PID,
+		Bundle:      status.Annotations[vcAnnotations.BundlePathKey],
+		Annotations: status.Annotations,
+	}
+}
+
+// StateToOCIState translates a virtcontainers container state into an OCI one.
+func StateToOCIState(state types.StateString) specs.ContainerState {
+	switch state {
+	case types.StateReady:
+		return StateCreated
+	case types.StateRunning:
+		return StateRunning
+	case types.StateStopped:
+		return StateStopped
+	case types.StatePaused:
+		return StatePaused
+	default:
+		return ""
+	}
+}
+
+// EnvVars converts an OCI process environment variables slice
+// into a virtcontainers EnvVar slice.
+func EnvVars(envs []string) ([]types.EnvVar, error) {
+	var envVars []types.EnvVar
+
+	envDelimiter := "="
+	expectedEnvLen := 2
+
+	for _, env := range envs {
+		envSlice := strings.SplitN(env, envDelimiter, expectedEnvLen)
+
+		if len(envSlice) < expectedEnvLen {
+			return []types.EnvVar{}, fmt.Errorf("Wrong string format: %s, expecting only %v parameters separated with %q",
+				env, expectedEnvLen, envDelimiter)
+		}
+
+		if envSlice[0] == "" {
+			return []types.EnvVar{}, fmt.Errorf("Environment variable cannot be empty")
+		}
+
+		envSlice[1] = strings.Trim(envSlice[1], "' ")
+
+		envVar := types.EnvVar{
+			Var:   envSlice[0],
+			Value: envSlice[1],
+		}
+
+		envVars = append(envVars, envVar)
+	}
+
+	return envVars, nil
+}
+
+// GetOCIConfig returns an OCI spec configuration from the annotation
+// stored into the container status.
+func GetOCIConfig(status vc.ContainerStatus) (specs.Spec, error) {
+	if status.Spec == nil {
+		return specs.Spec{}, fmt.Errorf("missing OCI spec for container")
+	}
+
+	return *status.Spec, nil
+}
+
 // IsCRIOContainerManager check if a Pod is created from CRI-O
 func IsCRIOContainerManager(spec *specs.Spec) bool {
 	if val, ok := spec.Annotations[crioAnnotations.ContainerType]; ok {
