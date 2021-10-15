@@ -670,7 +670,7 @@ func (s *Sandbox) createCgroups() error {
 	// or only the virtual CPU ones (SandboxCgroupOnly is false).
 	s.sandboxCgroup, err = cgroups.NewSandboxCgroup(cgroupPath, &resources, s.config.SandboxCgroupOnly)
 	if err != nil {
-		return fmt.Errorf("Could not create the sandbox cgroup %v", err)
+		return fmt.Errorf("Could not create the sandbox cgroup: %v", err)
 	}
 
 	// Now that the sandbox cgroup is created, we can set the state cgroup root paths.
