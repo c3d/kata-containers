@@ -13,11 +13,18 @@ import (
 	"os"
 
 	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils"
+	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils/katatrace"
 	vc "github.com/kata-containers/kata-containers/src/runtime/virtcontainers"
 	"github.com/kata-containers/kata-containers/src/runtime/virtcontainers/pkg/compatoci"
 	"github.com/kata-containers/kata-containers/src/runtime/virtcontainers/pkg/oci"
 	"github.com/urfave/cli"
 )
+
+var createTracingTags = map[string]string{
+	"source":    "runtime",
+	"package":   "cmd",
+	"subsystem": "create",
+}
 
 var createCLICommand = cli.Command{
 	Name:  "create",
@@ -91,12 +98,12 @@ func create(ctx context.Context, containerID, bundlePath, console, pidFilePath s
 	runtimeConfig oci.RuntimeConfig) error {
 	var err error
 
-	span, ctx := katautils.Trace(ctx, "create")
-	defer span.Finish()
+	span, ctx := katatrace.Trace(ctx, kataLog, "create", createTracingTags)
+	defer span.End()
 
 	kataLog = kataLog.WithField("container", containerID)
 	setExternalLoggers(ctx, kataLog)
-	span.SetTag("container", containerID)
+	katatrace.AddTag(span, "container", containerID)
 
 	if bundlePath == "" {
 		cwd, err := os.Getwd()
@@ -152,8 +159,8 @@ func create(ctx context.Context, containerID, bundlePath, console, pidFilePath s
 }
 
 func createPIDFile(ctx context.Context, pidFilePath string, pid int) error {
-	span, _ := katautils.Trace(ctx, "createPIDFile")
-	defer span.Finish()
+	span, ctx := katatrace.Trace(ctx, kataLog, "createPIDFile", createTracingTags)
+	defer span.End()
 
 	if pidFilePath == "" {
 		// runtime should not fail since pid file is optional

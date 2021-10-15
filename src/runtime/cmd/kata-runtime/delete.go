@@ -12,12 +12,19 @@ import (
 	"os"
 
 	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils"
+	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils/katatrace"
 	vc "github.com/kata-containers/kata-containers/src/runtime/virtcontainers"
 	vcAnnot "github.com/kata-containers/kata-containers/src/runtime/virtcontainers/pkg/annotations"
 	"github.com/kata-containers/kata-containers/src/runtime/virtcontainers/pkg/oci"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
+
+var deleteTracingTags = map[string]string{
+	"source":    "runtime",
+	"package":   "cmd",
+	"subsystem": "delete",
+}
 
 var deleteCLICommand = cli.Command{
 	Name:  "delete",
@@ -61,12 +68,12 @@ EXAMPLE:
 }
 
 func delete(ctx context.Context, containerID string, force bool) error {
-	span, ctx := katautils.Trace(ctx, "delete")
-	defer span.Finish()
+	span, ctx := katatrace.Trace(ctx, kataLog, "delete", deleteTracingTags)
+	defer span.End()
 
 	kataLog = kataLog.WithField("container", containerID)
 	setExternalLoggers(ctx, kataLog)
-	span.SetTag("container", containerID)
+	katatrace.AddTag(span, "container", containerID)
 
 	// Checks the MUST and MUST NOT from OCI runtime specification
 	status, sandboxID, err := getExistingContainerInfo(ctx, containerID)
@@ -87,8 +94,8 @@ func delete(ctx context.Context, containerID string, force bool) error {
 
 	setExternalLoggers(ctx, kataLog)
 
-	span.SetTag("container", containerID)
-	span.SetTag("sandbox", sandboxID)
+	katatrace.AddTag(span, "container", containerID)
+	katatrace.AddTag(span, "sandbox", sandboxID)
 
 	containerType, err := oci.GetContainerType(status.Annotations)
 	if err != nil {
@@ -132,8 +139,8 @@ func delete(ctx context.Context, containerID string, force bool) error {
 }
 
 func deleteSandbox(ctx context.Context, sandboxID string, force bool) error {
-	span, _ := katautils.Trace(ctx, "deleteSandbox")
-	defer span.Finish()
+	span, ctx := katatrace.Trace(ctx, kataLog, "deleteSandbox", deleteTracingTags)
+	defer span.End()
 
 	status, err := vci.StatusSandbox(ctx, sandboxID)
 	if err != nil {
@@ -154,8 +161,8 @@ func deleteSandbox(ctx context.Context, sandboxID string, force bool) error {
 }
 
 func deleteContainer(ctx context.Context, sandboxID, containerID string, forceStop bool) error {
-	span, _ := katautils.Trace(ctx, "deleteContainer")
-	defer span.Finish()
+	span, ctx := katatrace.Trace(ctx, kataLog, "deleteContainer", deleteTracingTags)
+	defer span.End()
 
 	if forceStop {
 		if _, err := vci.StopContainer(ctx, sandboxID, containerID); err != nil {
@@ -171,8 +178,8 @@ func deleteContainer(ctx context.Context, sandboxID, containerID string, forceSt
 }
 
 func removeCgroupsPath(ctx context.Context, containerID string, cgroupsPathList []string) error {
-	span, _ := katautils.Trace(ctx, "removeCgroupsPath")
-	defer span.Finish()
+	span, ctx := katatrace.Trace(ctx, kataLog, "removeCgroupsPath", deleteTracingTags)
+	defer span.End()
 
 	if len(cgroupsPathList) == 0 {
 		kataLog.WithField("container", containerID).Info("Cgroups files not removed because cgroupsPath was empty")

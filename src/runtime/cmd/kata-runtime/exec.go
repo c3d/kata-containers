@@ -15,12 +15,19 @@ import (
 	"syscall"
 
 	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils"
+	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils/katatrace"
 	"github.com/kata-containers/kata-containers/src/runtime/virtcontainers/pkg/oci"
 	"github.com/kata-containers/kata-containers/src/runtime/virtcontainers/types"
 
 	specs "github.com/opencontainers/runtime-spec/specs-go"
 	"github.com/urfave/cli"
 )
+
+var execTracingTags = map[string]string{
+	"source":    "runtime",
+	"package":   "cmd",
+	"subsystem": "exec",
+}
 
 type execParams struct {
 	ociProcess   specs.Process
@@ -190,14 +197,14 @@ func generateExecParams(context *cli.Context, specProcess *specs.Process) (execP
 }
 
 func execute(ctx context.Context, context *cli.Context) error {
-	span, ctx := katautils.Trace(ctx, "execute")
-	defer span.Finish()
+	span, ctx := katatrace.Trace(ctx, kataLog, "execute", execTracingTags)
+	defer span.End()
 
 	containerID := context.Args().First()
 
 	kataLog = kataLog.WithField("container", containerID)
 	setExternalLoggers(ctx, kataLog)
-	span.SetTag("container", containerID)
+	katatrace.AddTag(span, "container", containerID)
 
 	status, sandboxID, err := getExistingContainerInfo(ctx, containerID)
 	if err != nil {
@@ -206,7 +213,7 @@ func execute(ctx context.Context, context *cli.Context) error {
 
 	kataLog = kataLog.WithField("sandbox", sandboxID)
 	setExternalLoggers(ctx, kataLog)
-	span.SetTag("sandbox", sandboxID)
+	katatrace.AddTag(span, "sandbox", sandboxID)
 
 	// Retrieve OCI spec configuration.
 	ociSpec, err := oci.GetOCIConfig(status)
@@ -224,7 +231,7 @@ func execute(ctx context.Context, context *cli.Context) error {
 
 	kataLog = kataLog.WithField("container", containerID)
 	setExternalLoggers(ctx, kataLog)
-	span.SetTag("container", containerID)
+	katatrace.AddTag(span, "container", containerID)
 
 	// container MUST be ready or running.
 	if status.State.State != types.StateReady &&

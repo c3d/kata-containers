@@ -10,9 +10,16 @@ import (
 	"context"
 
 	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils"
+	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils/katatrace"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
+
+var pauseTracingTags = map[string]string{
+	"source":    "runtime",
+	"package":   "cmd",
+	"subsystem": "pause",
+}
 
 var noteText = `Use "` + katautils.NAME + ` list" to identify container statuses.`
 
@@ -58,13 +65,13 @@ func toggle(c *cli.Context, pause bool) error {
 }
 
 func toggleContainerPause(ctx context.Context, containerID string, pause bool) (err error) {
-	span, _ := katautils.Trace(ctx, "pause")
-	defer span.Finish()
-	span.SetTag("pause", pause)
+	span, ctx := katatrace.Trace(ctx, kataLog, "pause", pauseTracingTags)
+	defer span.End()
+	katatrace.AddTag(span, "pause", pause)
 
 	kataLog = kataLog.WithField("container", containerID)
 	setExternalLoggers(ctx, kataLog)
-	span.SetTag("container", containerID)
+	katatrace.AddTag(span, "container", containerID)
 
 	// Checks the MUST and MUST NOT from OCI runtime specification
 	status, sandboxID, err := getExistingContainerInfo(ctx, containerID)
@@ -80,8 +87,8 @@ func toggleContainerPause(ctx context.Context, containerID string, pause bool) (
 	})
 
 	setExternalLoggers(ctx, kataLog)
-	span.SetTag("container", containerID)
-	span.SetTag("sandbox", sandboxID)
+	katatrace.AddTag(span, "container", containerID)
+	katatrace.AddTag(span, "sandbox", sandboxID)
 
 	if pause {
 		err = vci.PauseContainer(ctx, sandboxID, containerID)

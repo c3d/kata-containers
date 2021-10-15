@@ -11,12 +11,19 @@ import (
 	"fmt"
 
 	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils"
+	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils/katatrace"
 	vc "github.com/kata-containers/kata-containers/src/runtime/virtcontainers"
 	vcAnnot "github.com/kata-containers/kata-containers/src/runtime/virtcontainers/pkg/annotations"
 	"github.com/kata-containers/kata-containers/src/runtime/virtcontainers/pkg/oci"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
+
+var startTracingTags = map[string]string{
+	"source":    "runtime",
+	"package":   "cmd",
+	"subsystem": "start",
+}
 
 var startCLICommand = cli.Command{
 	Name:  "start",
@@ -49,12 +56,12 @@ var startCLICommand = cli.Command{
 }
 
 func start(ctx context.Context, containerID string) (vc.VCSandbox, error) {
-	span, _ := katautils.Trace(ctx, "start")
-	defer span.Finish()
+	span, ctx := katatrace.Trace(ctx, kataLog, "start", startTracingTags)
+	defer span.End()
 
 	kataLog = kataLog.WithField("container", containerID)
 	setExternalLoggers(ctx, kataLog)
-	span.SetTag("container", containerID)
+	katatrace.AddTag(span, "container", containerID)
 
 	// Checks the MUST and MUST NOT from OCI runtime specification
 	status, sandboxID, err := getExistingContainerInfo(ctx, containerID)
@@ -70,8 +77,8 @@ func start(ctx context.Context, containerID string) (vc.VCSandbox, error) {
 	})
 
 	setExternalLoggers(ctx, kataLog)
-	span.SetTag("container", containerID)
-	span.SetTag("sandbox", sandboxID)
+	katatrace.AddTag(span, "container", containerID)
+	katatrace.AddTag(span, "sandbox", sandboxID)
 
 	containerType, err := oci.GetContainerType(status.Annotations)
 	if err != nil {

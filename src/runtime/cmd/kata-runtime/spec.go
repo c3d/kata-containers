@@ -12,10 +12,16 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils"
+	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils/katatrace"
 	"github.com/opencontainers/runc/libcontainer/specconv"
 	"github.com/urfave/cli"
 )
+
+var specTracingTags = map[string]string{
+	"source":    "runtime",
+	"package":   "cmd",
+	"subsystem": "spec",
+}
 
 var specCLICommand = cli.Command{
 	Name:      "spec",
@@ -78,8 +84,8 @@ generate a proper rootless spec file.`,
 			return err
 		}
 
-		span, _ := katautils.Trace(ctx, "spec")
-		defer span.Finish()
+		span, ctx := katatrace.Trace(ctx, kataLog, "spec", specTracingTags)
+		defer span.End()
 
 		spec := specconv.Example()
 

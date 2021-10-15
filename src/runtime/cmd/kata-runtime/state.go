@@ -12,10 +12,16 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils"
+	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils/katatrace"
 	"github.com/kata-containers/kata-containers/src/runtime/virtcontainers/pkg/oci"
 	"github.com/urfave/cli"
 )
+
+var stateTracingTags = map[string]string{
+	"source":    "runtime",
+	"package":   "cmd",
+	"subsystem": "state",
+}
 
 var stateCLICommand = cli.Command{
 	Name:  "state",
@@ -41,11 +47,11 @@ instance of a container.`,
 }
 
 func state(ctx context.Context, containerID string) error {
-	span, _ := katautils.Trace(ctx, "state")
-	defer span.Finish()
+	span, ctx := katatrace.Trace(ctx, kataLog, "state", stateTracingTags)
+	defer span.End()
 
 	kataLog = kataLog.WithField("container", containerID)
-	span.SetTag("container", containerID)
+	katatrace.AddTag(span, "container", containerID)
 
 	setExternalLoggers(ctx, kataLog)
 

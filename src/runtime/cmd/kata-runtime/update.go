@@ -13,13 +13,19 @@ import (
 	"strconv"
 
 	"github.com/docker/go-units"
-	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils"
+	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils/katatrace"
 	"github.com/kata-containers/kata-containers/src/runtime/virtcontainers/types"
 
 	"github.com/opencontainers/runtime-spec/specs-go"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
+
+var updateTracingTags = map[string]string{
+	"source":    "runtime",
+	"package":   "cmd",
+	"subsystem": "update",
+}
 
 func i64Ptr(i int64) *int64   { return &i }
 func u64Ptr(i uint64) *uint64 { return &i }
@@ -134,8 +140,8 @@ other options are ignored.
 			return err
 		}
 
-		span, _ := katautils.Trace(ctx, "update")
-		defer span.Finish()
+		span, ctx := katatrace.Trace(ctx, kataLog, "update", updateTracingTags)
+		defer span.End()
 
 		if !context.Args().Present() {
 			return fmt.Errorf("Missing container ID, should at least provide one")
@@ -145,7 +151,7 @@ other options are ignored.
 
 		kataLog = kataLog.WithField("container", containerID)
 		setExternalLoggers(ctx, kataLog)
-		span.SetTag("container", containerID)
+		katatrace.AddTag(span, "container", containerID)
 
 		status, sandboxID, err := getExistingContainerInfo(ctx, containerID)
 		if err != nil {
@@ -161,8 +167,8 @@ other options are ignored.
 
 		setExternalLoggers(ctx, kataLog)
 
-		span.SetTag("container", containerID)
-		span.SetTag("sandbox", sandboxID)
+		katatrace.AddTag(span, "container", containerID)
+		katatrace.AddTag(span, "sandbox", sandboxID)
 
 		// container MUST be running
 		if state := status.State.State; !(state == types.StateRunning || state == types.StateReady) {

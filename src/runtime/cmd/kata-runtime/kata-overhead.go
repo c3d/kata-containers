@@ -12,11 +12,17 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils"
+	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils/katatrace"
 	"github.com/kata-containers/kata-containers/src/runtime/virtcontainers/types"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
+
+var overheadTracingTags = map[string]string{
+	"source":    "runtime",
+	"package":   "cmd",
+	"subsystem": "overhead",
+}
 
 var kataOverheadCLICommand = cli.Command{
 	Name:  "kata-overhead",
@@ -25,7 +31,7 @@ var kataOverheadCLICommand = cli.Command{
 
    <sandbox-id> is your name for the instance of the sandbox.`,
 
-	Description: `The kata-overhead command shows the overhead of a running Kata sandbox. Overhead 
+	Description: `The kata-overhead command shows the overhead of a running Kata sandbox. Overhead
        is calculated as the sum of pod resource utilization as measured on host cgroup minus the total
        container usage measured inside the Kata guest for each container's cgroup.`,
 
@@ -51,12 +57,12 @@ var kataOverheadCLICommand = cli.Command{
 }
 
 func overhead(ctx context.Context, containerID string) error {
-	span, _ := katautils.Trace(ctx, "overhead")
-	defer span.Finish()
+	span, ctx := katatrace.Trace(ctx, kataLog, "overhead", overheadTracingTags)
+	defer span.End()
 
 	kataLog = kataLog.WithField("container", containerID)
 	setExternalLoggers(ctx, kataLog)
-	span.SetTag("container", containerID)
+	katatrace.AddTag(span, "container", containerID)
 
 	status, sandboxID, err := getExistingContainerInfo(ctx, containerID)
 	if err != nil {
@@ -71,8 +77,8 @@ func overhead(ctx context.Context, containerID string) error {
 	})
 
 	setExternalLoggers(ctx, kataLog)
-	span.SetTag("container", containerID)
-	span.SetTag("sandbox", sandboxID)
+	katatrace.AddTag(span, "container", containerID)
+	katatrace.AddTag(span, "sandbox", sandboxID)
 
 	if status.State.State == types.StateStopped {
 		return fmt.Errorf("container with id %s is not running", status.ID)

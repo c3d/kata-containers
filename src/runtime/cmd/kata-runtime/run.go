@@ -13,10 +13,16 @@ import (
 	"os"
 	"syscall"
 
-	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils"
+	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils/katatrace"
 	"github.com/kata-containers/kata-containers/src/runtime/virtcontainers/pkg/oci"
 	"github.com/urfave/cli"
 )
+
+var runTracingTags = map[string]string{
+	"source":    "runtime",
+	"package":   "cmd",
+	"subsystem": "run",
+}
 
 var runCLICommand = cli.Command{
 	Name:  "run",
@@ -83,8 +89,8 @@ var runCLICommand = cli.Command{
 
 func run(ctx context.Context, containerID, bundle, console, consoleSocket, pidFile string, detach, systemdCgroup bool,
 	runtimeConfig oci.RuntimeConfig) error {
-	span, ctx := katautils.Trace(ctx, "run")
-	defer span.Finish()
+	span, ctx := katatrace.Trace(ctx, kataLog, "run", runTracingTags)
+	defer span.End()
 
 	consolePath, err := setupConsole(console, consoleSocket)
 	if err != nil {

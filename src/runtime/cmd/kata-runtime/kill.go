@@ -13,12 +13,19 @@ import (
 	"syscall"
 
 	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils"
+	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils/katatrace"
 	vc "github.com/kata-containers/kata-containers/src/runtime/virtcontainers"
 	"github.com/kata-containers/kata-containers/src/runtime/virtcontainers/pkg/oci"
 	"github.com/kata-containers/kata-containers/src/runtime/virtcontainers/types"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
+
+var killTracingTags = map[string]string{
+	"source":    "runtime",
+	"package":   "cmd",
+	"subsystem": "kill",
+}
 
 var killCLICommand = cli.Command{
 	Name:  "kill",
@@ -99,12 +106,12 @@ var signalList = map[string]syscall.Signal{
 }
 
 func kill(ctx context.Context, containerID, signal string, all bool) error {
-	span, _ := katautils.Trace(ctx, "kill")
-	defer span.Finish()
+	span, ctx := katatrace.Trace(ctx, kataLog, "kill", killTracingTags)
+	defer span.End()
 
 	kataLog = kataLog.WithField("container", containerID)
 	setExternalLoggers(ctx, kataLog)
-	span.SetTag("container", containerID)
+	katatrace.AddTag(span, "container", containerID)
 
 	// Checks the MUST and MUST NOT from OCI runtime specification
 	status, sandboxID, err := getExistingContainerInfo(ctx, containerID)
@@ -120,8 +127,8 @@ func kill(ctx context.Context, containerID, signal string, all bool) error {
 		"sandbox":   sandboxID,
 	})
 
-	span.SetTag("container", containerID)
-	span.SetTag("sandbox", sandboxID)
+	katatrace.AddTag(span, "container", containerID)
+	katatrace.AddTag(span, "sandbox", sandboxID)
 
 	setExternalLoggers(ctx, kataLog)
 

@@ -20,10 +20,17 @@ import (
 	"github.com/urfave/cli"
 
 	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils"
+	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils/katatrace"
 	vc "github.com/kata-containers/kata-containers/src/runtime/virtcontainers"
 	oci "github.com/kata-containers/kata-containers/src/runtime/virtcontainers/pkg/oci"
 	specs "github.com/opencontainers/runtime-spec/specs-go"
 )
+
+var listTracingTags = map[string]string{
+	"source":    "runtime",
+	"package":   "cmd",
+	"subsystem": "list",
+}
 
 const formatOptions = `table or json`
 
@@ -116,8 +123,8 @@ To list containers created using a non-default value for "--root":
 			return err
 		}
 
-		span, ctx := katautils.Trace(ctx, "list")
-		defer span.Finish()
+		span, ctx := katatrace.Trace(ctx, kataLog, "list", listTracingTags)
+		defer span.End()
 
 		s, err := getContainers(ctx, context)
 		if err != nil {

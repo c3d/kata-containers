@@ -16,10 +16,16 @@ import (
 	vc "github.com/kata-containers/kata-containers/src/runtime/virtcontainers"
 	"github.com/kata-containers/kata-containers/src/runtime/virtcontainers/types"
 
-	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils"
+	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils/katatrace"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
+
+var eventsTracingTags = map[string]string{
+	"source":    "runtime",
+	"package":   "cmd",
+	"subsystem": "events",
+}
 
 type event struct {
 	Type string      `json:"type"`
@@ -143,8 +149,8 @@ information is displayed once every 5 seconds.`,
 			return err
 		}
 
-		span, _ := katautils.Trace(ctx, "events")
-		defer span.Finish()
+		span, ctx := katatrace.Trace(ctx, kataLog, "events", eventsTracingTags)
+		defer span.End()
 
 		containerID := context.Args().First()
 		if containerID == "" {
@@ -153,7 +159,7 @@ information is displayed once every 5 seconds.`,
 
 		kataLog = kataLog.WithField("container", containerID)
 		setExternalLoggers(ctx, kataLog)
-		span.SetTag("container", containerID)
+		katatrace.AddTag(span, "container", containerID)
 
 		duration := context.Duration("interval")
 		if duration <= 0 {
@@ -173,8 +179,8 @@ information is displayed once every 5 seconds.`,
 		})
 
 		setExternalLoggers(ctx, kataLog)
-		span.SetTag("container", containerID)
-		span.SetTag("sandbox", sandboxID)
+		katatrace.AddTag(span, "container", containerID)
+		katatrace.AddTag(span, "sandbox", sandboxID)
 
 		if status.State.State == types.StateStopped {
 			return fmt.Errorf("container with id %s is not running", status.ID)
