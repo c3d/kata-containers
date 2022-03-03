@@ -389,9 +389,9 @@ fn online_resources(logger: &Logger, path: &str, pattern: &str, num: i32) -> Res
 
     for e in fs::read_dir(path)? {
         let entry = e?;
-        let tmpname = entry.file_name();
-        let name = tmpname.to_str().unwrap();
-        let p = entry.path();
+        let entry = e.unwrap();
+        let name = entry.file_name();
+        let name = name.to_str().unwrap();
 
         if re.is_match(name) {
             let file = format!("{}/{}", p.to_str().unwrap(), SYSFS_ONLINE_FILE);
