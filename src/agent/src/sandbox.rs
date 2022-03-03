@@ -388,7 +388,9 @@ fn online_resources(logger: &Logger, path: &str, pattern: &str, num: i32) -> Res
     let re = Regex::new(pattern)?;
 
     for e in fs::read_dir(path)? {
-        let entry = e?;
+        if e.is_err() {
+            continue;
+        }
         let entry = e.unwrap();
         let name = entry.file_name();
         let name = name.to_str().unwrap();
