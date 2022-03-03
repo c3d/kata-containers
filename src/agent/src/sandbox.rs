@@ -396,6 +396,7 @@ fn online_resources(logger: &Logger, path: &str, pattern: &str, num: i32) -> Res
         let name = name.to_str().unwrap();
 
         if re.is_match(name) {
+            let p = entry.path();
             let file = format!("{}/{}", p.to_str().unwrap(), SYSFS_ONLINE_FILE);
             info!(logger, "onlining resource {}", file.as_str());
 
