@@ -413,7 +413,7 @@ fn online_resources(logger: &Logger, path: &str, pattern: &str, num: i32) -> Res
                 }
                 count += 1;
 
-                if num > 0 && count == num {
+                if count == num {
                     break;
                 }
             }
