@@ -1,5 +1,5 @@
 ## Overview
-In cloud-native scenarios, there is an increased demand for container startup speed, resource consumption, stability, and security. To achieve this, we would like to introduce you to a solid and secure Rust version kata-runtime. We chose Rust because it is designed to prevent developers from accidentally introducing flaws in their code that can lead to buffer overflows, missing pointer checks, integer range errors, or other memory-related vulnerabilities. Besides, in contrast to Go, Rust makes a variety of design trade-offs in order to obtain the fastest feasible execution performance. 
+In cloud-native scenarios, there is an increased demand for container startup speed, resource consumption, stability, and security. To achieve this, we would like to introduce you to a solid and secure Rust version kata-runtime. We chose Rust because it is designed to prevent developers from accidentally introducing flaws in their code that can lead to buffer overflows, missing pointer checks, integer range errors, or other memory-related vulnerabilities. Besides, in contrast to Go, Rust makes a variety of design trade-offs in order to obtain the fastest feasible execution performance.
 Also, we provide the following designs:
 
 - Turn key solution with builtin Dragonball Sandbox
@@ -21,7 +21,7 @@ We provide Dragonball Sandbox to enable built-in VMM by integrating VMM's functi
 **Async is already in stable Rust and allows us to write async code**
 
 - Async provides significantly reduced CPU and memory overhead, especially for workloads with a large amount of IO-bound tasks
-- Async is zero-cost in Rust, which means that you only pay for what you use. Specifically, you can use async without heap allocations and dynamic dispatch, which greatly improves efficiency 
+- Async is zero-cost in Rust, which means that you only pay for what you use. Specifically, you can use async without heap allocations and dynamic dispatch, which greatly improves efficiency
 - For more (see [Why Async?](https://rust-lang.github.io/async-book/01_getting_started/02_why_async.html) and [The State of Asynchronous Rust]https://rust-lang.github.io/async-book/01_getting_started/03_state_of_async_rust.html).
 
 **There may be several problems if implementing kata-runtime with Sync Rust**
@@ -48,7 +48,7 @@ The kata-runtime is controlled by TOKIO_RUNTIME_WORKER_THREADS to run the OS thr
   ├─ TTRPC client handler thread(7 * M * tokio task)
   ├─ container stdin io thread(M * tokio task)
   ├─ container stdin io thread(M * tokio task)
-  └─ container stdin io thread(M * tokio task)	
+  └─ container stdin io thread(M * tokio task)
 ```
 ### Extensible Framework
 The Rust version kata-runtime is designed with the extension of service, runtime, and hypervisor, combined with configuration to meet the needs of different scenarios. At present, the service provides a register mechanism to support multiple services. Services could interact with runtime through messages. In addition, the runtime handler handles messages from services. To meet the needs of a binary that supports multiple runtimes and hypervisors, the startup must obtain the runtime handler type and hypervisor type through configuration.
@@ -90,7 +90,3 @@ In our case, there will be a variety of resources, and every resource has severa
 |  | Acrn | Stage 3 |
 |  | CloudHypervisor | Stage 3 |
 |  | Firecracker | Stage 3 |
-
-
-
-
