@@ -1,11 +1,27 @@
 ## Overview
-In cloud-native scenarios, there is an increased demand for container startup speed, resource consumption, stability, and security, areas where the present Kata Containers runtime is challenged relative to other runtimes. To achieve this, we propose a solid, field-tested and secure Rust version of the kata-runtime. We chose Rust because it is designed to prevent developers from accidentally introducing flaws in their code that can lead to buffer overflows, missing pointer checks, integer range errors, or other memory-related vulnerabilities. Besides, in contrast to Go, Rust makes a variety of design trade-offs in order to obtain the fastest feasible execution performance.
+In cloud-native scenarios, there is an increased demand for container startup speed, resource consumption, stability, and security, areas where the present Kata Containers runtime is challenged relative to other runtimes. To achieve this, we propose a solid, field-tested and secure Rust version of the kata-runtime.
+
 Also, we provide the following designs:
 
 - Turn key solution with builtin Dragonball Sandbox
 - Async io to reduce resource consumption
 - Extensible framework for multiple services, runtimes and hypervisors
 - Lifecycle management for sandbox and container associated resources
+
+### Rationale for choosing Rust
+
+We chose Rust because it is designed as a system language with a focus on efficiency.
+In contrast to Go, Rust makes a variety of design trade-offs in order to obtain
+good execution performance, with innovative techniques that, in contrast to C or
+C++, provide reasonable protection against common memory errors (buffer
+overflow, invalid pointers, range errors), error checking (ensuring errors are
+dealt with), thread safety, ownership of resources, and more.
+
+These benefits were verified in our project when the Kata Containers guest agent
+was rewritten in Rust. We notably saw a significant reduction in memory usage
+with the Rust-based implementation.
+
+
 ## Design
 ### Architecture
 ![architecture](./images/architecture.png)
