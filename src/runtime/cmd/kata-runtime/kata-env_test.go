@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"math"
 	"os"
 	"path"
 	"path/filepath"
@@ -134,7 +135,7 @@ func makeRuntimeConfig(prefixDir string) (configFile string, ociConfig oci.Runti
 		HotPlugVFIO:          hotPlugVFIO,
 		ColdPlugVFIO:         coldPlugVFIO,
 		DisableNewNetNs:      disableNewNetNs,
-		DefaultVCPUCount:     hypConfig.NumVCPUs,
+		DefaultVCPUCount:     uint32(math.Ceil(hypConfig.NumVCPUs)),
 		DefaultMaxVCPUCount:  hypConfig.DefaultMaxVCPUs,
 		DefaultMemSize:       hypConfig.MemorySize,
 		DefaultMsize9p:       hypConfig.Msize9p,
