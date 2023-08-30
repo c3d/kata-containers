@@ -12,6 +12,7 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"math"
 
 	"github.com/pkg/errors"
 
@@ -522,7 +523,7 @@ type HypervisorConfig struct {
 	ColdPlugVFIO config.PCIePort
 
 	// NumVCPUs specifies default number of vCPUs for the VM.
-	NumVCPUs float64
+	NumVCPUsF float32
 
 	//DefaultMaxVCPUs specifies the maximum number of vCPUs for the VM.
 	DefaultMaxVCPUs uint32
@@ -791,6 +792,14 @@ func (conf *HypervisorConfig) FirmwareAssetPath() (string, error) {
 // FirmwareVolumeAssetPath returns the guest firmware volume path
 func (conf *HypervisorConfig) FirmwareVolumeAssetPath() (string, error) {
 	return conf.assetPath(types.FirmwareVolumeAsset)
+}
+
+func RoundUpNumVCPUs(cpus float32) uint32 {
+	return uint32(math.Ceil(float64(cpus)))
+}
+
+func (conf HypervisorConfig) NumVCPUs() uint32 {
+	return RoundUpNumVCPUs(conf.NumVCPUsF)
 }
 
 func appendParam(params []Param, parameter string, value string) []Param {

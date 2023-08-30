@@ -161,7 +161,7 @@ func createAllRuntimeConfigFiles(dir, hypervisor string) (testConfig testRuntime
 		RootfsType:            rootfsType,
 		KernelParams:          vc.DeserializeParams(strings.Fields(kernelParams)),
 		HypervisorMachineType: machineType,
-		NumVCPUs:              float64(defaultVCPUCount),
+		NumVCPUs:              float32(defaultVCPUCount),
 		DefaultMaxVCPUs:       getCurrentCpuNum(),
 		MemorySize:            defaultMemSize,
 		DefaultMaxMemorySize:  maxMemory,
@@ -554,7 +554,7 @@ func TestMinimalRuntimeConfig(t *testing.T) {
 		InitrdPath:            defaultInitrdPath,
 		RootfsType:            defaultRootfsType,
 		HypervisorMachineType: defaultMachineType,
-		NumVCPUs:              float64(defaultVCPUCount),
+		NumVCPUs:              float32(defaultVCPUCount),
 		DefaultMaxVCPUs:       defaultMaxVCPUCount,
 		MemorySize:            defaultMemSize,
 		DisableBlockDeviceUse: defaultDisableBlockDeviceUse,
@@ -941,7 +941,7 @@ func TestHypervisorDefaults(t *testing.T) {
 	h.NumVCPUs = 2
 	assert.Equal(h.defaultVCPUs(), float64(2), "default vCPU number is wrong")
 
-	h.NumVCPUs = float64(numCPUs + 1)
+	h.NumVCPUs = float32(numCPUs + 1)
 	assert.Equal(h.defaultVCPUs(), float64(numCPUs), "default vCPU number is wrong")
 
 	h.DefaultMaxVCPUs = 2
@@ -1395,7 +1395,7 @@ func TestDefaultCPUFeatures(t *testing.T) {
 func TestUpdateRuntimeConfigurationVMConfig(t *testing.T) {
 	assert := assert.New(t)
 
-	vcpus := float64(2)
+	vcpus := float32(2)
 	mem := uint32(2048)
 
 	config := oci.RuntimeConfig{}
@@ -1727,7 +1727,7 @@ vfio_mode="vfio"
 	assert.NoError(t, err)
 
 	assert.Equal(t, config.Hypervisor["qemu"].Path, "/usr/bin/qemu-kvm")
-	assert.Equal(t, config.Hypervisor["qemu"].NumVCPUs, float64(2))
+	assert.Equal(t, config.Hypervisor["qemu"].NumVCPUs, float32(2))
 	assert.Equal(t, config.Hypervisor["qemu"].DefaultBridges, uint32(4))
 	assert.Equal(t, config.Hypervisor["qemu"].SharedFS, "virtio-9p")
 	assert.Equal(t, config.Runtime.Debug, true)

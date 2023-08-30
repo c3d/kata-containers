@@ -8,7 +8,6 @@ package factory
 import (
 	"context"
 	"fmt"
-	"math"
 
 	"github.com/kata-containers/kata-containers/src/runtime/pkg/katautils/katatrace"
 	pb "github.com/kata-containers/kata-containers/src/runtime/protocols/cache"
@@ -72,7 +71,7 @@ func NewFactory(ctx context.Context, config Config, fetchOnly bool) (vc.Factory,
 }
 
 func resetHypervisorConfig(config *vc.VMConfig) {
-	config.HypervisorConfig.NumVCPUs = 0
+	config.HypervisorConfig.NumVCPUsF = 0
 	config.HypervisorConfig.MemorySize = 0
 	config.HypervisorConfig.BootToBeTemplate = false
 	config.HypervisorConfig.BootFromTemplate = false
@@ -157,8 +156,8 @@ func (f *factory) GetVM(ctx context.Context, config vc.VMConfig) (*vc.VM, error)
 
 	online := false
 	baseConfig := f.base.Config().HypervisorConfig
-	if baseConfig.NumVCPUs < hypervisorConfig.NumVCPUs {
-		err = vm.AddCPUs(ctx, uint32(math.Ceil(hypervisorConfig.NumVCPUs))-uint32(baseConfig.NumVCPUs))
+	if baseConfig.NumVCPUsF < hypervisorConfig.NumVCPUsF {
+		err = vm.AddCPUs(ctx, hypervisorConfig.NumVCPUs()-baseConfig.NumVCPUs())
 		if err != nil {
 			return nil, err
 		}

@@ -116,9 +116,9 @@ type SandboxStats struct {
 
 type SandboxResourceSizing struct {
 	// The number of CPUs required for the sandbox workload(s)
-	WorkloadCPUs float64
+	WorkloadCPUs float32
 	// The base number of CPUs for the VM that are assigned as overhead
-	BaseCPUs float64
+	BaseCPUs float32
 	// The amount of memory required for the sandbox workload(s)
 	WorkloadMemMB uint32
 	// The base amount of memory required for that VM that is assigned as overhead
@@ -2114,7 +2114,7 @@ func (s *Sandbox) updateResources(ctx context.Context) error {
 		return err
 	}
 	// Add default vcpus for sandbox
-	sandboxVCPUs += s.hypervisor.HypervisorConfig().NumVCPUs
+	sandboxVCPUs += s.hypervisor.HypervisorConfig().NumVCPUsF
 
 	sandboxMemoryByte, sandboxneedPodSwap, sandboxSwapByte := s.calculateSandboxMemory()
 
@@ -2137,7 +2137,7 @@ func (s *Sandbox) updateResources(ctx context.Context) error {
 
 	// Update VCPUs
 	s.Logger().WithField("cpus-sandbox", sandboxVCPUs).Debugf("Request to hypervisor to update vCPUs")
-	oldCPUs, newCPUs, err := s.hypervisor.ResizeVCPUs(ctx, uint32(math.Ceil(sandboxVCPUs)))
+	oldCPUs, newCPUs, err := s.hypervisor.ResizeVCPUs(ctx, RoundUpNumVCPUs(sandboxVCPUs))
 	if err != nil {
 		return err
 	}
@@ -2333,8 +2333,8 @@ func (s *Sandbox) calculateSandboxMemory() (uint64, bool, int64) {
 	return memorySandbox, needPodSwap, swapSandbox
 }
 
-func (s *Sandbox) calculateSandboxCPUs() (float64, error) {
-	mCPU := float64(0)
+func (s *Sandbox) calculateSandboxCPUs() (float32, error) {
+	mCPU := float32(0)
 	cpusetCount := int(0)
 
 	for _, c := range s.config.Containers {
@@ -2361,7 +2361,7 @@ func (s *Sandbox) calculateSandboxCPUs() (float64, error) {
 	//  1. BestEffort QoS: no proper support today in Kata.
 	//  2. We could be constrained only by CPUSets. Check for this:
 	if mCPU == 0 && cpusetCount > 0 {
-		return float64(cpusetCount), nil
+		return float32(cpusetCount), nil
 	}
 
 	return mCPU, nil

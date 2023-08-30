@@ -315,7 +315,7 @@ func (q *qemu) setup(ctx context.Context, id string, hypervisorConfig *Hyperviso
 }
 
 func (q *qemu) cpuTopology() govmmQemu.SMP {
-	return q.arch.cpuTopology(uint32(math.Ceil(q.config.NumVCPUs)), q.config.DefaultMaxVCPUs)
+	return q.arch.cpuTopology(q.config.NumVCPUs(), q.config.DefaultMaxVCPUs)
 }
 
 func (q *qemu) memoryTopology() (govmmQemu.Memory, error) {
@@ -1559,7 +1559,7 @@ func (q *qemu) hotplugAddBlockDevice(ctx context.Context, drive *config.BlockDri
 			return err
 		}
 
-		queues := int(math.Ceil(q.config.NumVCPUs))
+		queues := int(q.config.NumVCPUs())
 
 		if err = q.qmpMonitorCh.qmp.ExecutePCIDeviceAdd(q.qmpMonitorCh.ctx, drive.ID, devID, driver, addr, bridge.ID, romFile, queues, true, defaultDisableModern); err != nil {
 			return err
@@ -1915,9 +1915,9 @@ func (q *qemu) hotplugNetDevice(ctx context.Context, endpoint Endpoint, op Opera
 		}
 		if machine.Type == QemuCCWVirtio {
 			devNoHotplug := fmt.Sprintf("fe.%x.%x", bridge.Addr, addr)
-			return q.qmpMonitorCh.qmp.ExecuteNetCCWDeviceAdd(q.qmpMonitorCh.ctx, tap.Name, devID, endpoint.HardwareAddr(), devNoHotplug, int(math.Ceil(q.config.NumVCPUs)))
+			return q.qmpMonitorCh.qmp.ExecuteNetCCWDeviceAdd(q.qmpMonitorCh.ctx, tap.Name, devID, endpoint.HardwareAddr(), devNoHotplug, int(q.config.NumVCPUs()))
 		}
-		return q.qmpMonitorCh.qmp.ExecuteNetPCIDeviceAdd(q.qmpMonitorCh.ctx, tap.Name, devID, endpoint.HardwareAddr(), addr, bridge.ID, romFile, int(math.Ceil(q.config.NumVCPUs)), defaultDisableModern)
+		return q.qmpMonitorCh.qmp.ExecuteNetPCIDeviceAdd(q.qmpMonitorCh.ctx, tap.Name, devID, endpoint.HardwareAddr(), addr, bridge.ID, romFile, int(q.config.NumVCPUs()), defaultDisableModern)
 
 	}
 
@@ -2649,7 +2649,7 @@ func calcHotplugMemMiBSize(mem uint32, memorySectionSizeMB uint32) (uint32, erro
 }
 
 func (q *qemu) ResizeVCPUs(ctx context.Context, reqVCPUs uint32) (currentVCPUs uint32, newVCPUs uint32, err error) {
-	currentVCPUs = uint32(math.Ceil(q.config.NumVCPUs)) + uint32(len(q.state.HotpluggedVCPUs))
+	currentVCPUs = q.config.NumVCPUs() + uint32(len(q.state.HotpluggedVCPUs))
 	newVCPUs = currentVCPUs
 
 	switch {

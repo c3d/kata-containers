@@ -136,7 +136,7 @@ type RuntimeConfig struct {
 
 	// Sandbox sizing information which, if provided, indicates the size of
 	// the sandbox needed for the workload(s)
-	SandboxCPUs  float64
+	SandboxCPUs  float32
 	SandboxMemMB uint32
 
 	// Determines if we should attempt to size the VM at boot time and skip
@@ -686,7 +686,7 @@ func addHypervisorCPUOverrides(ocispec specs.Spec, sbConfig *vc.SandboxConfig) e
 		if int(vcpus) > numCPUs {
 			return fmt.Errorf("Number of cpus %d specified in annotation default_vcpus is greater than the number of CPUs %d on the system", vcpus, numCPUs)
 		}
-		sbConfig.HypervisorConfig.NumVCPUs = float64(vcpus)
+		sbConfig.HypervisorConfig.NumVCPUsF = float32(vcpus)
 		return nil
 	}); err != nil {
 		return err
@@ -1001,10 +1001,10 @@ func SandboxConfig(ocispec specs.Spec, runtime RuntimeConfig, bundlePath, cid st
 	// with the base number of CPU/memory (which is equal to the default CPU/memory specified for the runtime
 	// configuration or annotations) as well as any specified workload resources.
 	if sandboxConfig.StaticResourceMgmt {
-		sandboxConfig.SandboxResources.BaseCPUs = sandboxConfig.HypervisorConfig.NumVCPUs
+		sandboxConfig.SandboxResources.BaseCPUs = sandboxConfig.HypervisorConfig.NumVCPUsF
 		sandboxConfig.SandboxResources.BaseMemMB = sandboxConfig.HypervisorConfig.MemorySize
 
-		sandboxConfig.HypervisorConfig.NumVCPUs += sandboxConfig.SandboxResources.WorkloadCPUs
+		sandboxConfig.HypervisorConfig.NumVCPUsF += sandboxConfig.SandboxResources.WorkloadCPUs
 		sandboxConfig.HypervisorConfig.MemorySize += sandboxConfig.SandboxResources.WorkloadMemMB
 
 		ociLog.WithFields(logrus.Fields{
@@ -1170,7 +1170,7 @@ func (a *annotationConfiguration) setUintWithCheck(f func(uint64) error) error {
 
 // CalculateSandboxSizing will calculate the number of CPUs and amount of Memory that should
 // be added to the VM if sandbox annotations are provided with this sizing details
-func CalculateSandboxSizing(spec *specs.Spec) (numCPU float64, memSizeMB uint32) {
+func CalculateSandboxSizing(spec *specs.Spec) (numCPU float32, memSizeMB uint32) {
 	var memory, quota int64
 	var period uint64
 	var err error
@@ -1217,7 +1217,7 @@ func CalculateSandboxSizing(spec *specs.Spec) (numCPU float64, memSizeMB uint32)
 
 // CalculateContainerSizing will calculate the number of CPUs and amount of memory that is needed
 // based on the provided LinuxResources
-func CalculateContainerSizing(spec *specs.Spec) (numCPU float64, memSizeMB uint32) {
+func CalculateContainerSizing(spec *specs.Spec) (numCPU float32, memSizeMB uint32) {
 	var memory, quota int64
 	var period uint64
 
@@ -1239,7 +1239,7 @@ func CalculateContainerSizing(spec *specs.Spec) (numCPU float64, memSizeMB uint3
 	return calculateVMResources(period, quota, memory)
 }
 
-func calculateVMResources(period uint64, quota int64, memory int64) (numCPU float64, memSizeMB uint32) {
+func calculateVMResources(period uint64, quota int64, memory int64) (numCPU float32, memSizeMB uint32) {
 	numCPU = vcutils.CalculateMilliCPUs(quota, period)
 
 	if memory < 0 {

@@ -131,7 +131,7 @@ type hypervisor struct {
 	MemSlots                       uint32          `toml:"memory_slots"`
 	DefaultBridges                 uint32          `toml:"default_bridges"`
 	Msize9p                        uint32          `toml:"msize_9p"`
-	NumVCPUs                       float64         `toml:"default_vcpus"`
+	NumVCPUs                       float32         `toml:"default_vcpus"`
 	BlockDeviceCacheSet            bool            `toml:"block_device_cache_set"`
 	BlockDeviceCacheDirect         bool            `toml:"block_device_cache_direct"`
 	BlockDeviceCacheNoflush        bool            `toml:"block_device_cache_noflush"`
@@ -392,14 +392,14 @@ func getCurrentCpuNum() uint32 {
 	return cpu
 }
 
-func (h hypervisor) defaultVCPUs() float64 {
-	numCPUs := float64(getCurrentCpuNum())
+func (h hypervisor) defaultVCPUs() float32 {
+	numCPUs := float32(getCurrentCpuNum())
 
 	if h.NumVCPUs < 0 || h.NumVCPUs > numCPUs {
 		return numCPUs
 	}
 	if h.NumVCPUs == 0 { // or unspecified
-		return float64(defaultVCPUCount)
+		return float32(defaultVCPUCount)
 	}
 
 	return h.NumVCPUs
@@ -704,7 +704,7 @@ func newFirecrackerHypervisorConfig(h hypervisor) (vc.HypervisorConfig, error) {
 		RootfsType:            rootfsType,
 		FirmwarePath:          firmware,
 		KernelParams:          vc.DeserializeParams(strings.Fields(kernelParams)),
-		NumVCPUs:              h.defaultVCPUs(),
+		NumVCPUsF:             h.defaultVCPUs(),
 		DefaultMaxVCPUs:       h.defaultMaxVCPUs(),
 		MemorySize:            h.defaultMemSz(),
 		MemSlots:              h.defaultMemSlots(),
@@ -833,7 +833,7 @@ func newQemuHypervisorConfig(h hypervisor) (vc.HypervisorConfig, error) {
 		CPUFeatures:             cpuFeatures,
 		KernelParams:            vc.DeserializeParams(strings.Fields(kernelParams)),
 		HypervisorMachineType:   machineType,
-		NumVCPUs:                h.defaultVCPUs(),
+		NumVCPUsF:               h.defaultVCPUs(),
 		DefaultMaxVCPUs:         h.defaultMaxVCPUs(),
 		MemorySize:              h.defaultMemSz(),
 		MemSlots:                h.defaultMemSlots(),
@@ -943,7 +943,7 @@ func newAcrnHypervisorConfig(h hypervisor) (vc.HypervisorConfig, error) {
 		HypervisorCtlPathList: h.CtlPathList,
 		FirmwarePath:          firmware,
 		KernelParams:          vc.DeserializeParams(strings.Fields(kernelParams)),
-		NumVCPUs:              h.defaultVCPUs(),
+		NumVCPUsF:             h.defaultVCPUs(),
 		DefaultMaxVCPUs:       h.defaultMaxVCPUs(),
 		MemorySize:            h.defaultMemSz(),
 		MemSlots:              h.defaultMemSlots(),
@@ -1034,7 +1034,7 @@ func newClhHypervisorConfig(h hypervisor) (vc.HypervisorConfig, error) {
 		MachineAccelerators:            machineAccelerators,
 		KernelParams:                   vc.DeserializeParams(strings.Fields(kernelParams)),
 		HypervisorMachineType:          machineType,
-		NumVCPUs:                       h.defaultVCPUs(),
+		NumVCPUsF:                      h.defaultVCPUs(),
 		DefaultMaxVCPUs:                h.defaultMaxVCPUs(),
 		MemorySize:                     h.defaultMemSz(),
 		MemSlots:                       h.defaultMemSlots(),
@@ -1108,7 +1108,7 @@ func newDragonballHypervisorConfig(h hypervisor) (vc.HypervisorConfig, error) {
 		ImagePath:       image,
 		RootfsType:      rootfsType,
 		KernelParams:    vc.DeserializeParams(strings.Fields(kernelParams)),
-		NumVCPUs:        h.defaultVCPUs(),
+		NumVCPUsF:       h.defaultVCPUs(),
 		DefaultMaxVCPUs: h.defaultMaxVCPUs(),
 		MemorySize:      h.defaultMemSz(),
 		MemSlots:        h.defaultMemSlots(),
@@ -1271,7 +1271,7 @@ func GetDefaultHypervisorConfig() vc.HypervisorConfig {
 		MachineAccelerators:      defaultMachineAccelerators,
 		CPUFeatures:              defaultCPUFeatures,
 		HypervisorMachineType:    defaultMachineType,
-		NumVCPUs:                 float64(defaultVCPUCount),
+		NumVCPUsF:                float32(defaultVCPUCount),
 		DefaultMaxVCPUs:          defaultMaxVCPUCount,
 		MemorySize:               defaultMemSize,
 		MemOffset:                defaultMemOffset,

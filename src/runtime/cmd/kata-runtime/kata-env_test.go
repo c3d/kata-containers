@@ -135,7 +135,7 @@ func makeRuntimeConfig(prefixDir string) (configFile string, ociConfig oci.Runti
 		HotPlugVFIO:          hotPlugVFIO,
 		ColdPlugVFIO:         coldPlugVFIO,
 		DisableNewNetNs:      disableNewNetNs,
-		DefaultVCPUCount:     uint32(math.Ceil(hypConfig.NumVCPUs)),
+		DefaultVCPUCount:     hypConfig.NumVCPUs(),
 		DefaultMaxVCPUCount:  hypConfig.DefaultMaxVCPUs,
 		DefaultMemSize:       hypConfig.MemorySize,
 		DefaultMsize9p:       hypConfig.Msize9p,

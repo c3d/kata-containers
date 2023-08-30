@@ -120,12 +120,12 @@ func WriteToFile(path string, data []byte) error {
 }
 
 // CalculateMilliCPUs converts CPU quota and period to milli-CPUs
-func CalculateMilliCPUs(quota int64, period uint64) float64 {
+func CalculateMilliCPUs(quota int64, period uint64) float32 {
 	// If quota is -1, it means the CPU resource request is
 	// unconstrained.  In that case, we don't currently assign
 	// additional CPUs.
 	if quota >= 0 && period != 0 {
-		return float64(quota) / float64(period)
+		return float32(quota) / float32(period)
 	}
 
 	return 0

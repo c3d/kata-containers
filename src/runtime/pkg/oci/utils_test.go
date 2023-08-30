@@ -671,7 +671,7 @@ func TestAddHypervisorAnnotations(t *testing.T) {
 	err := addAnnotations(ocispec, &sbConfig, runtimeConfig)
 	assert.NoError(err)
 
-	assert.Equal(sbConfig.HypervisorConfig.NumVCPUs, float64(1))
+	assert.Equal(sbConfig.HypervisorConfig.NumVCPUsF, float32(1))
 	assert.Equal(sbConfig.HypervisorConfig.DefaultMaxVCPUs, uint32(1))
 	assert.Equal(sbConfig.HypervisorConfig.MemorySize, uint32(1024))
 	assert.Equal(sbConfig.HypervisorConfig.MemSlots, uint32(20))
