@@ -1,7 +1,7 @@
 module github.com/kata-containers/kata-containers/src/runtime
 
 // Keep in sync with version in versions.yaml
-go 1.24.0
+go 1.24.6
 
 toolchain go1.24.6
 
